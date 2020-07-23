@@ -1,7 +1,77 @@
 ﻿
 @{
     ViewBag.Title = "Decrypt";
+    List<string> files = new List<string>();
+    string folderPath = Server.MapPath("~/Files");
+    string[] filePaths = Directory.GetFiles(folderPath, "*.txt");
+    List<string> CollectionFileNames = new List<string>();
+    for(int i =0; i < filePaths.Length; i++)
+    {
+        CollectionFileNames.Add(Path.GetFileName(filePaths[i]));
+    }
+
 }
 
 <h2>Decrypt</h2>
+
+
+<h3>Выберите файл для загрузки</h3>
+@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="upload" />
+    <br>
+    <input type="submit" value="Загрузить" />
+}
+
+
+<h3>Выберите файл для загрузки</h3>
+@using (Html.BeginForm("Download", "Home"))
+{
+
+    <input type="submit" value="скачать" />
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>DOWNLOAD</title>
+</head>
+<body>
+    <div>
+        <h1>Reading Data from a File</h1>
+
+        <button type=button
+                onclick="btnLogin_Click()">
+            dddddddd
+        </button>
+
+        <button type=button
+                onclick="Click_Download">
+            Show hint
+        </button>
+
+        
+        <h1>List of files</h1>
+        <ol>
+            @foreach (var el in CollectionFileNames)
+            {
+                <li>
+                    @el
+                </li>
+            }
+            
+            
+        </ol>
+        
+
+        <button type="submit" runat="server" id="btnLogin" onserverClick="btnLogin_Click">login </button>
+
+        <label>
+            <input type=checkbox name=club onchange="form.clubfields.disabled = !checked">
+            Use Club Card
+        </label>
+    </div>
+</body>
+</html>
 
