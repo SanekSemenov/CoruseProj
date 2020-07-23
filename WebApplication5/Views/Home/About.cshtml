@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "About";
+    WebApplication5.Controllers.HomeController controller = new WebApplication5.Controllers.HomeController();
+
+    //controller.Download();
+
+
+
+}
+<h3>Выберите файл для загрузки</h3>
+@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="upload" />
+    <br>
+    <input type="submit" value="Загрузить" />
+}
+
+
+<h3>Выберите файл для загрузки</h3>
+@using (Html.BeginForm("Download", "Home"))
+{
+   
+   <input type="submit" value="скачать" />
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>DOWNLOAD </title>
+</head>
+<body>
+    <div>
+        <h1>Reading Data from a File</h1>
+
+        <button type=button
+                onclick="btnLogin_Click()">
+            dddddddd
+        </button>
+
+        <button type=button
+                onclick="Click_Download">
+            Show hint
+        </button>
+
+
+
+        <button type="submit" runat="server" id="btnLogin" onserverClick="btnLogin_Click">login </button>
+
+    </div>
+</body>
+</html>
+
