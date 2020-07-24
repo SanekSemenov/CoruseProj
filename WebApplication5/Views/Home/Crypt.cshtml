@@ -7,7 +7,7 @@
 <h2>Crypt</h2>
 
 
-<h3>Выберите файл для загрузки</h3>
+<h3>Выберите файл для загрузки и последующей зашифровки</h3>
 @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <input type="file" name="upload" />
@@ -18,66 +18,27 @@
 }
 <h3>------------------------------------------------------------------------------------------------------------</h3>
 <h3>Введите ключ:</h3>
-@using (Html.BeginForm("Someclick", "Home", FormMethod.Post))
+@using (Html.BeginForm("Encrypting", "Home", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
         <!-- атрибут name такой же как в контроллере у метода параметр -->
         <input type="text" name="parameterName" id="ls" />
-        <button class="btn btn-info" type="submit">Просмотр</button>
-    </div>
 
-    <button type="submit" runat="server" id="btnLogin" onserverClick="Someclick">ШИФРОВАТЬ))</button>
+    </div>
+    <br>
+    <button type="submit" runat="server" id="btnLogin" >Зашифровать!</button>
 }
 
 <h3>------------------------------------------------------------------------------------------------------------</h3>
 
-<h3>Выберите файл для загрузки</h3>
+<h3>Файл можно забрать ниже ↓</h3>
 
+
+<h3>Выберите файл для загрузки</h3>
 @using (Html.BeginForm("Download", "Home"))
 {
-    // Download metod in HomeController
 
     <input type="submit" value="скачать" />
 }
-
-
-
-@using (Html.BeginForm("Show", "Home", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        <!-- атрибут name такой же как в контроллере у метода параметр -->
-        <input type="text" name="parameterName" id="ls" />
-        <button class="btn btn-info" type="submit">Просмотр</button>
-    </div>
-}
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>DOWNLOAD </title>
-</head>
-<body>
-    <div>
-
-        <h1>Reading Data from a File</h1>
-
-        <button type=button
-                onclick="btnLogin_Click()">
-            dddddddd
-        </button>
-
-        <input type="hidden" value="Подтвердить" name="BookId" />
-        <p>Введите свое имя: </p>
-        @Html.TextBox("Person", "Введите имя")
-
-
-        <button type="submit" runat="server" id="btnLogin" onserverClick="btnLogin_Click">login </button>
-
-    </div>
-</body>
-</html>
-
 

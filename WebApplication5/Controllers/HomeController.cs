@@ -10,15 +10,6 @@ namespace WebApplication5.Controllers
 {
     public class HomeController : Controller
     {
-        char[] characters = new char[] { 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И',
-                                            'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С',
-                                            'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ь', 'Ы', 'Ъ',
-                                            'Э', 'Ю', 'Я', ' ', '1', '2', '3', '4', '5', '6', '7',
-                                            '8', '9', '0' };
-
-        private int N; //длина алфавита
-        public string key = "";
-
         public ActionResult Index()
         {
             return View();
@@ -65,7 +56,7 @@ namespace WebApplication5.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
+        //[HttpPost]
         //public ActionResult Show(string parameterName)
         //{
         //    // тут что то делаешь с этим параметром.
@@ -81,37 +72,35 @@ namespace WebApplication5.Controllers
             
                 Response.ContentType = "text/txt";
                 Response.AppendHeader("Content-Disposition", "attachment; filename=Deshifrovka.txt");
-                Response.TransmitFile(Server.MapPath("~/Files/Result.txt"));
+                Response.TransmitFile(Server.MapPath("~/Files/out.txt"));
                 Response.End();
             
             return RedirectToAction("Index");
         }
 
-        public ActionResult Someclick(string parameterName)
+        public ActionResult Encrypting(string parameterName)
         {
-            N = characters.Length;
-            key = parameterName;
-            
-            if (key.Length > 0)//textBoxKeyWord.Text.Length > 0)
+
+            if (parameterName.Length > 0)//textBoxKeyWord.Text.Length > 0)
             {
-                string s;
-                Response.Write("<script>alert('" + key + "')</script>");
+                string inputText = "";
+
+                var cipher = new VigenereCipher("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");
 
                 StreamReader sr = new StreamReader(Server.MapPath("~/Files/in.txt"));
                 StreamWriter sw = new StreamWriter(Server.MapPath("~/Files/out.txt"));
 
                 while (!sr.EndOfStream)
                 {
-                    s = sr.ReadLine();
-                    sw.WriteLine(Encode(s, key));
-                    // sw.Write(WebApplication5.Controllers.HomeController.Encode(s, textBoxKeyWord.Text), true, System.Text.Encoding.GetEncoding("windows-1251"));
+                    inputText = sr.ReadLine().ToUpper();
+                    sw.Write(cipher.Encrypt(inputText, parameterName.ToUpper()));
                 }
 
-
+                //sw.WriteLine(cipher.Encrypt(inputText, parameterName));
                 sr.Close();
                 sw.Close();
             }
-            else if ( key == null)
+            else if (parameterName == null)
             {
                 Response.Write("<script>alert('Заполните поле ключ!')</script>");
             }
@@ -120,33 +109,105 @@ namespace WebApplication5.Controllers
                 Response.Write("<script>alert('Заполните поле ключ!')</script>");
             }
 
+          
             //return View();
-            return RedirectToAction("Index");
+            return RedirectToAction("Crypt");
         }
 
-        public string Encode(string input, string keyword)
+        public ActionResult Decrypting(string parameterName)
         {
-            input = input.ToUpper();
-            keyword = keyword.ToUpper();
 
-            string result = "";
-
-            int keyword_index = 0;
-
-            foreach (char symbol in input)
+            if (parameterName.Length > 0)//textBoxKeyWord.Text.Length > 0)
             {
-                int c = (Array.IndexOf(characters, symbol) +
-                    Array.IndexOf(characters, keyword[keyword_index])) % N;
+                string inputText = "";
 
-                result += characters[c];
+                var cipher = new VigenereCipher("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");
 
-                keyword_index++;
+                StreamReader sr = new StreamReader(Server.MapPath("~/Files/out.txt"));
+                //StreamReader sr = new StreamReader(Server.MapPath("~/Files/Result.docx"));
+                StreamWriter sw = new StreamWriter(Server.MapPath("~/Files/decrypt.txt"));
+                //StreamWriter sw = new StreamWriter(Server.MapPath("~/Files/Result1.docx"));
 
-                if ((keyword_index + 1) == keyword.Length)
-                    keyword_index = 0;
+                while (!sr.EndOfStream)
+                {
+                    inputText = sr.ReadLine().ToUpper();
+                    sw.Write(cipher.Decrypt(inputText, parameterName.ToUpper()));
+                }
+
+                //sw.WriteLine(cipher.Encrypt(inputText, parameterName));
+                sr.Close();
+                sw.Close();
+            }
+            else if (parameterName == null)
+            {
+                Response.Write("<script>alert('Заполните поле ключ!')</script>");
+            }
+            else
+            {
+                Response.Write("<script>alert('Заполните поле ключ!')</script>");
             }
 
-            return result;
+
+            //return View();
+            return RedirectToAction("Decrypt");
         }
+
+
+
+    }
+
+    public class VigenereCipher
+    {
+        const string defaultAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        readonly string letters;
+
+        public VigenereCipher(string alphabet = null)
+        {
+            letters = string.IsNullOrEmpty(alphabet) ? defaultAlphabet : alphabet;
+        }
+
+        //генерация повторяющегося пароля
+        private string GetRepeatKey(string s, int n)
+        {
+            var p = s;
+            while (p.Length < n)
+            {
+                p += p;
+            }
+
+            return p.Substring(0, n);
+        }
+
+        private string Vigenere(string text, string password, bool encrypting = true)
+        {
+            var gamma = GetRepeatKey(password, text.Length);
+            var retValue = "";
+            var q = letters.Length;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                var letterIndex = letters.IndexOf(text[i]);
+                var codeIndex = letters.IndexOf(gamma[i]);
+                if (letterIndex < 0)
+                {
+                    //если буква не найдена, добавляем её в исходном виде
+                    retValue += text[i].ToString();
+                }
+                else
+                {
+                    retValue += letters[(q + letterIndex + ((encrypting ? 1 : -1) * codeIndex)) % q].ToString();
+                }
+            }
+
+            return retValue;
+        }
+
+        //шифрование текста
+        public string Encrypt(string plainMessage, string password)
+            => Vigenere(plainMessage, password);
+
+        //дешифрование текста
+        public string Decrypt(string encryptedMessage, string password)
+            => Vigenere(encryptedMessage, password, false);
     }
 }
