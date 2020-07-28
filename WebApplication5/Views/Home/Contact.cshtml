@@ -59,22 +59,30 @@
         <form name="test" method="post" action="Refresh">
 
             <p>
+                <br></br>
                 <input type="submit" value="Отправить">
             </p>
         </form>
 
+        <h5>------------------------------------------------------------------------------------------------</h5>
         <h3>Выберите файл из списка! </h3>
 
 
-        @Html.DropDownList("user", new SelectList(new string[] { "Tom", "Sam", "Bob", "Alice" }), "Выберите пользователя")
 
-        @Html.DropDownList(ViewData["Users"].ToString(), ViewBag.Users as SelectList)
+        @using (Html.BeginForm("CategoryChosen", "Home", FormMethod.Post))
+        {
+            @Html.DropDownList(ViewData["Users"].ToString(), ViewBag.Users as SelectList)
+
+            <br></br>
+
+            <input type="submit" value="Выбрать" />
+        }
+        <!--Html.DropDownList(ViewData["Users"].ToString(), ViewBag.Users as SelectList)-->
 
         <br></br>
 
-        <input type="submit" value="Выбрать" />
 
-        <br></br>
+        <h5>------------------------------------------------------------------------------------------------</h5>
 
         @result
         @if (result == "")

@@ -57,6 +57,12 @@ namespace WebApplication5.Controllers
             return View();
         }
 
+        public ViewResult CategoryChosen(string Mov)
+        {
+            ViewBag.Message = Mov;
+            return View();
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -75,19 +81,6 @@ namespace WebApplication5.Controllers
                 ddl.Items.Add(new ListItem(el));
             }
 
-
-        //    List<User> users = new List<User>
-        //{
-        //    new User {Id=1, Name="Tom", Age=35 },
-        //    new User {Id=2, Name="Alice", Age=29 },
-        //    new User {Id=3, Name="Sam", Age=36 },
-        //    new User {Id=4, Name="Bob", Age=31 },
-        //};
-        //    ViewBag.Users = new SelectList(users, "Id", "Name");
-        //    ViewData["Users"] = new SelectList(users, "Id", "Name");
-
-
-
             List<Files> files = new List<Files>();
             string folderPath = Server.MapPath("~/Files/");
             string[] filePaths = Directory.GetFiles(folderPath, "*.txt");
@@ -99,6 +92,7 @@ namespace WebApplication5.Controllers
 
             ViewBag.Users = new SelectList(files, "Id", "Name");
             ViewData["Users"] = new SelectList(files, "Id", "Name");
+
             return View();
         }
 
