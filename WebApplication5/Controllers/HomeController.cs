@@ -5,11 +5,53 @@ using System.Web;
 using System.Web.Mvc;
 using System.Text;
 using System.IO;
+using System.Web.UI.WebControls;
+using System.Management.Instrumentation;
 
 namespace WebApplication5.Controllers
 {
     public class HomeController : Controller
     {
+        public static List<string> selectList = new List<string>();
+        public static DropDownList ddl = new DropDownList();
+        public class User
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public int Age { get; set; }
+        }
+
+        public class Files
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        public ActionResult Create()
+        {
+            List<User> users = new List<User>
+        {
+            new User {Id=1, Name="Tom", Age=35 },
+            new User {Id=2, Name="Alice", Age=29 },
+            new User {Id=3, Name="Sam", Age=36 },
+            new User {Id=4, Name="Bob", Age=31 },
+        };
+            ViewBag.Users = new SelectList(users, "Id", "Name");
+            ViewData["Users"] = new SelectList(users, "Id", "Name");
+
+            //List<Files> files = new List<Files>();
+            //string folderPath = Server.MapPath("~/Files/");
+            //string[] filePaths = Directory.GetFiles(folderPath, "*.txt");
+            //List<string> CollectionFileNames = new List<string>();
+            //for (int i = 0; i < filePaths.Length; i++)
+            //{
+            //    files.Add(new Files() { Id = i, Name = Path.GetFileName(filePaths[i]) }); ;
+            //}
+
+            //ViewBag.Users = new SelectList(files, "Id", "Name");
+            return View();
+        }
+
         public ActionResult Index()
         {
             return View();
@@ -26,13 +68,45 @@ namespace WebApplication5.Controllers
         {
             ViewBag.Message = "Your contact page.";
 
+            selectList.Add("1");
+            selectList.Add("2");
+           foreach(var el in selectList)
+            {
+                ddl.Items.Add(new ListItem(el));
+            }
+
+
+        //    List<User> users = new List<User>
+        //{
+        //    new User {Id=1, Name="Tom", Age=35 },
+        //    new User {Id=2, Name="Alice", Age=29 },
+        //    new User {Id=3, Name="Sam", Age=36 },
+        //    new User {Id=4, Name="Bob", Age=31 },
+        //};
+        //    ViewBag.Users = new SelectList(users, "Id", "Name");
+        //    ViewData["Users"] = new SelectList(users, "Id", "Name");
+
+
+
+            List<Files> files = new List<Files>();
+            string folderPath = Server.MapPath("~/Files/");
+            string[] filePaths = Directory.GetFiles(folderPath, "*.txt");
+            List<string> CollectionFileNames = new List<string>();
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                files.Add(new Files() { Id = i, Name = Path.GetFileName(filePaths[i]) }); ;
+            }
+
+            ViewBag.Users = new SelectList(files, "Id", "Name");
+            ViewData["Users"] = new SelectList(files, "Id", "Name");
             return View();
         }
+
 
         public ActionResult Crypt()
         {
             ViewBag.Message = "Page for crypt.";
-
+                        
             return View();
         }
 
