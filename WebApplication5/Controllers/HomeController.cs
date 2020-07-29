@@ -162,6 +162,9 @@ namespace WebApplication5.Controllers
                 Response.TransmitFile(Server.MapPath("~/Files/encrypt_out.txt"));
                 Response.End();
 
+                
+                FileInfo fi1 = new FileInfo(Server.MapPath("~/Files/encrypt.txt"));
+                fi1.Delete();
                 FileInfo fi2 = new FileInfo(Server.MapPath("~/Files/encrypt_out.txt"));
                 fi2.Delete();
                 
@@ -181,6 +184,11 @@ namespace WebApplication5.Controllers
             Response.TransmitFile(Server.MapPath("~/Files/decrypt_out.txt"));
             Response.End();
 
+
+            FileInfo fi1 = new FileInfo(Server.MapPath("~/Files/decrypt.txt"));
+            fi1.Delete();
+            FileInfo fi2 = new FileInfo(Server.MapPath("~/Files/decrypt_out.txt"));
+            fi2.Delete();
 
             return View();
         }
@@ -217,9 +225,7 @@ namespace WebApplication5.Controllers
                 {
                     Response.Write("<script>alert('Заполните поле ключ!')</script>");
                 }
-
-                FileInfo fi2 = new FileInfo(Server.MapPath("~/Files/encrypt.txt"));
-                fi2.Delete();
+                               
             }
             catch(Exception ex)
             {

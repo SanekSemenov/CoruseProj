@@ -10,15 +10,20 @@
         CollectionFileNames.Add(Path.GetFileName(filePaths[i]));
     }
 
+    char[] delimiterChar = { ',' };
+
     var chooseFile = Server.MapPath("~/Files/decrypt.txt");
 
     var result = "";
     int isReady = 0;
     Array userData1 = null;
+    Array userData_OUT = null;
+    var goodFile = Server.MapPath("~/Files/decrypt_out.txt");
+    string crypty = "";
 
     if (File.Exists(chooseFile))
     {
-        userData1 = File.ReadAllLines(chooseFile, System.Text.Encoding.GetEncoding("windows-1251"));
+        userData1 = File.ReadAllLines(chooseFile);
         if (userData1 == null)
         {
             // Empty file.
@@ -36,6 +41,26 @@
         // File does not exist.
         result = "Файла не существует.";
         isReady = 0;
+    }
+
+    if (File.Exists(goodFile))
+    {
+        userData_OUT = File.ReadAllLines(goodFile);
+        if (userData_OUT == null)
+        {
+            // Empty file.
+            crypty = "Файл пуст.";
+
+        }
+        else
+        {
+        }
+    }
+    else
+    {
+        // File does not exist.
+        crypty = "Файл еще не готов!";
+
     }
 
 }
@@ -79,25 +104,120 @@
         </h5>
     }
 }
-<h4>------------------------------------------------------------------------------------------------------------</h4>
-<h5>Введите ключ:</h5>
-@using (Html.BeginForm("Decrypting", "Home", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        <!-- атрибут name такой же как в контроллере у метода параметр -->
-        <input type="text" name="parameterName" id="ls" />
+
+
+<html>
+<head>
+    <title>Reading Data from a File</title>
+    <style>
+        .box1 {
+            background: #f0f0f0; /* Цвет фона */
+            width: 1140px; /* Ширина блока */
+            padding: 10px; /* Поля */
+            border: 2px solid #000; /* Параметры рамки */
+        }
+    </style>
+</head>
+<body>
+    <div>
+
+
+        @if (isReady == 2)
+        {
+            <details>
+                <summary>Текст файла</summary>
+                <div class="box1">
+                    @foreach (string dataLine in userData1)
+                    {
+
+                        foreach (string dataItem in dataLine.Split(delimiterChar))
+                        {
+                            @dataItem
+                        }
+
+
+                    }
+                </div>
+            </details>
+        }
 
     </div>
-    <br>
-    <button type="submit" runat="server" id="btnLogin">Расшифровать!</button>
+</body>
+</html>
+
+@using (Html.BeginForm("Decrypting", "Home", FormMethod.Post))
+{
+    if (isReady == 2)
+    {
+        <h4>------------------------------------------------------------------------------------------------------------</h4>
+        <h5>Введите ключ:</h5>
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <!-- атрибут name такой же как в контроллере у метода параметр -->
+            <input type="text" name="parameterName" id="ls" />
+
+        </div>
+        <br>
+        <button type="submit" runat="server" id="btnLogin">Расшифровать!</button>
+
+        if (crypty == "")
+        {
+
+            <html>
+            <head>
+                <title>Reading Data from a File</title>
+                <style>
+                    .box1 {
+                        background: #f0f0f0; /* Цвет фона */
+                        width: 1140px; /* Ширина блока */
+                        padding: 10px; /* Поля */
+                        border: 2px solid #000; /* Параметры рамки */
+                    }
+                </style>
+            </head>
+            <body>
+                <div>
+
+                    @crypty
+                    @if (crypty == "")
+                    {
+                        <h4>------------------------------------------------------------------------------------------------------------</h4>
+                        <details>
+                            <summary>Текст в дешифрованном виде: </summary>
+                            <div class="box1">
+                                @foreach (string dataLine in userData_OUT)
+                                {
+
+                                    foreach (string dataItem in dataLine.Split(delimiterChar))
+                                    {
+                                        @dataItem
+                                    }
+
+
+                                }
+                            </div>
+                        </details>
+                    }
+
+                    </div>
+                </body>
+            </html>
+
+    }
+}
 }
 
-<h4>------------------------------------------------------------------------------------------------------------</h4>
-<h4>Файл забрать ниже ↓</h4>
 @using (Html.BeginForm("DeDownload", "Home"))
 {
+    if (crypty == "")
+    {
+        <h4>------------------------------------------------------------------------------------------------------------</h4>
+        <h4>Файл забрать ниже ↓</h4>
+        <input type="submit" value="Скачать" />
+    }
+    else
+    {
 
-    <input type="submit" value="Скачать" />
+    }
 }
 

@@ -4,12 +4,15 @@
 
     var text = "";
     Array userData = null;
-
+    var result = "";
+    int isReady = 0;
+    Array userData_OUT = null;
 
     char[] delimiterChar = { ',' };
 
     var dataFile = Server.MapPath("~/Files/encrypt.txt");
-
+    var goodFile = Server.MapPath("~/Files/encrypt_out.txt");
+    string crypty = "";
 
     if (File.Exists(dataFile))
     {
@@ -18,29 +21,9 @@
         {
             // Empty file.
             text = "Файл пуст.";
-        }
-    }
-    else
-    {
-        // File does not exist.
-        text = "      ";
-    }
-
-
-    var chooseFile = Server.MapPath("~/Files/encrypt.txt");
-
-    var result = "";
-    int isReady = 0;
-    Array userData1 = null;
-
-    if (File.Exists(chooseFile))
-    {
-        userData1 = File.ReadAllLines(chooseFile, System.Text.Encoding.GetEncoding("windows-1251"));
-        if (userData1 == null)
-        {
-            // Empty file.
             result = "Файл загружен, но он пуст.";
             isReady = 1;
+
         }
         else
         {
@@ -51,18 +34,35 @@
     else
     {
         // File does not exist.
+        text = " ";
         result = "Файла не существует.";
         isReady = 0;
     }
 
+    if (File.Exists(goodFile))
+    {
+        userData_OUT = File.ReadAllLines(goodFile);
+        if (userData_OUT == null)
+        {
+            // Empty file.
+            crypty = "Файл пуст.";
+
+        }
+        else
+        {
+        }
+    }
+    else
+    {
+        // File does not exist.
+        crypty = "Файл еще не готов!";
+
+    }
 }
 
 
-<h5> </h5>
-
-
-
 <h3>Выберите файл для загрузки</h3>
+
 @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <input type="file" name="upload" />
@@ -70,7 +70,9 @@
     <input type="submit" value="Загрузить" />
 
 }
+
 <h4>------------------------------------------------------------------------------------------------------------</h4>
+
 @{
     if (isReady == 2)
     {
@@ -120,7 +122,7 @@
         @if (text == "")
         {
             <details>
-                <summary>Текст файла</summary>
+                <summary>Исходный текст:</summary>
                 <div class="box1">
                     @foreach (string dataLine in userData)
                     {
@@ -156,20 +158,67 @@
         <br>
         <button type="submit" runat="server" id="btnLogin">Зашифровать!</button>
         //Response.Write("<script>alert('Успешно зашифрован!')</script>");
-        <h4>------------------------------------------------------------------------------------------------------------</h4>
-        <h4>Файл забрать ниже ↓</h4>
-    }
-    else
-    {
+
+        <br />
+
+        if (crypty == "")
+        {
+
+            <html>
+            <head>
+                <title>Reading Data from a File</title>
+                <style>
+                    .box1 {
+                        background: #f0f0f0; /* Цвет фона */
+                        width: 1140px; /* Ширина блока */
+                        padding: 10px; /* Поля */
+                        border: 2px solid #000; /* Параметры рамки */
+                    }
+                </style>
+            </head>
+            <body>
+                <div>
+
+                    @crypty
+                    @if (crypty == "")
+                    {
+                        <h4>------------------------------------------------------------------------------------------------------------</h4>
+                        <details>
+                            <summary>Текст в зашифрованном виде: </summary>
+                            <div class="box1">
+                                @foreach (string dataLine in userData_OUT)
+                                {
+
+                                    foreach (string dataItem in dataLine.Split(delimiterChar))
+                                    {
+                                        @dataItem
+                                    }
+
+
+                                }
+                            </div>
+                        </details>
+                    }
+
+                </div>
+            </body>
+        </html>
 
     }
+
+}
+else
+{
+
+}
 
 }
 
 @using (Html.BeginForm("Download", "Home"))
 {
-    if (isReady == 2)
-    {
+    if (crypty == "")
+    {   
+        <h4>Файл забрать ниже ↓</h4>
         <input type="submit" value="Скачать" />
     }
     else
