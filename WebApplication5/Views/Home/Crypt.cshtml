@@ -1,44 +1,84 @@
 ﻿
 @{
-    ViewBag.Title = "Crypt";
+   ViewBag.Title = "Crypt"; 
+
+
+    var chooseFile = Server.MapPath("~/Files/encrypt.txt");
+
+    var result = "";
+    int isReady = 0;
+    Array userData1 = null;
+
+    if (File.Exists(chooseFile))
+    {
+        userData1 = File.ReadAllLines(chooseFile, System.Text.Encoding.GetEncoding("windows-1251"));
+        if (userData1 == null)
+        {
+            // Empty file.
+            result = "Файл загружен, но он пуст.";
+            isReady = 1;
+        }
+        else
+        {
+            result = "Файл готов к шифрованию!";
+            isReady = 2;
+        }
+    }
+    else
+    {
+        // File does not exist.
+        result = "Файла не существует.";
+        isReady = 0;
+    }
 
 }
 
-<h2>Crypt</h2>
+        <font color=Red><h2>На этой странице вы можете зашифровать файл!</h2></font>
 
 
-<h3>Выберите файл для загрузки и последующей зашифровки</h3>
-@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    <input type="file" name="upload" />
-    <br>
-    <input type="submit" value="Загрузить" />
+            <h3>Выберите файл для загрузки и последующей зашифровки</h3>
+            @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="file" name="upload" />
+                <br>
+                <input type="submit" value="Загрузить" />
 
+            }
+            <h4>------------------------------------------------------------------------------------------------------------</h4>
+            @{
+                if (isReady == 2)
+                {
+                    <h5><label>@result</label></h5>
+                }
+                else if (isReady == 1)
+                {
+                    <h5><label>@result , но он пуст</label></h5>
+                }
+                else
+                {
+                    <h5><label>Файл не загружен. Просьба его загрузить!</label></h5>
+                }
+            }
+            <h4>------------------------------------------------------------------------------------------------------------</h4>
+            <h5>Введите ключ:</h5>
+            @using (Html.BeginForm("Encrypting", "Home", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    <!-- атрибут name такой же как в контроллере у метода параметр -->
+                    <input type="text" name="parameterName" id="ls" />
 
-}
-<h3>------------------------------------------------------------------------------------------------------------</h3>
-<h3>Введите ключ:</h3>
-@using (Html.BeginForm("Encrypting", "Home", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        <!-- атрибут name такой же как в контроллере у метода параметр -->
-        <input type="text" name="parameterName" id="ls" />
+                </div>
+                <br>
+                <button type="submit" runat="server" id="btnLogin">Зашифровать!</button>
+                //Response.Write("<script>alert('Успешно зашифрован!')</script>");
+            }
 
-    </div>
-    <br>
-    <button type="submit" runat="server" id="btnLogin" >Зашифровать!</button>
-}
+            <h4>------------------------------------------------------------------------------------------------------------</h4>
+            <h4>Файл забрать ниже ↓</h4>
+            @using (Html.BeginForm("Download", "Home"))
+            {
+                <input type="submit" value="Скачать" />
 
-<h3>------------------------------------------------------------------------------------------------------------</h3>
-
-<h3>Файл можно забрать ниже ↓</h3>
-
-
-<h3>Выберите файл для загрузки</h3>
-@using (Html.BeginForm("Download", "Home"))
-{
-
-    <input type="submit" value="скачать" />
-}
+            }
 

@@ -2,41 +2,20 @@
     ViewBag.Title = "Home Page";
 }
 
-<h2>Crypt</h2>
+
+<html>
+<head>
+    <title>DOWNLOAD </title>
+
+</head>
+<body>
+    <div>
+
+        <h1>Home, sweet home </h1>
 
 
-<h3>Выберите файл для загрузки и последующей зашифровки</h3>
-@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    <input type="file" name="upload" />
-    <br>
-    <input type="submit" value="Загрузить" />
 
-
-}
-<h3>------------------------------------------------------------------------------------------------------------</h3>
-<h3>Введите ключ:</h3>
-@using (Html.BeginForm("Encrypting", "Home", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        <!-- атрибут name такой же как в контроллере у метода параметр -->
-        <input type="text" name="parameterName" id="ls" />
 
     </div>
-    <br>
-    <button type="submit" runat="server" id="btnLogin">Зашифровать!</button>
-}
-
-<h3>------------------------------------------------------------------------------------------------------------</h3>
-
-<h3>Файл можно забрать ниже ↓</h3>
-
-
-<h3>Выберите файл для загрузки</h3>
-@using (Html.BeginForm("Download", "Home"))
-{
-
-    <input type="submit" value="скачать" />
-}
-
+</body>
+</html>

@@ -10,22 +10,65 @@
         CollectionFileNames.Add(Path.GetFileName(filePaths[i]));
     }
 
+    var chooseFile = Server.MapPath("~/Files/decrypt.txt");
+
+    var result = "";
+    int isReady = 0;
+    Array userData1 = null;
+
+    if (File.Exists(chooseFile))
+    {
+        userData1 = File.ReadAllLines(chooseFile, System.Text.Encoding.GetEncoding("windows-1251"));
+        if (userData1 == null)
+        {
+            // Empty file.
+            result = "Файл загружен, но он пуст.";
+            isReady = 1;
+        }
+        else
+        {
+            result = "Файл готов к дешифровке!";
+            isReady = 2;
+        }
+    }
+    else
+    {
+        // File does not exist.
+        result = "Файла не существует.";
+        isReady = 0;
+    }
+
 }
 
 <h2>Decrypt</h2>
 
 
-<h3>Выберите файл для загрузки на сервер и последующей расшифровки</h3>
-@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+<h3>Загрузите файл!</h3>
+@using (Html.BeginForm("DeUpload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <input type="file" name="upload" />
+    <input type="file" name="deupload" />
     <br>
     <input type="submit" value="Загрузить" />
 
 
 }
-<h3>------------------------------------------------------------------------------------------------------------</h3>
-<h3>Введите ключ:</h3>
+<h4>------------------------------------------------------------------------------------------------------------</h4>
+@{
+    if (isReady == 2)
+    {
+        <h5><label>@result</label></h5>
+    }
+    else if (isReady == 1)
+    {
+        <h5><label>@result , но он пуст</label></h5>
+    }
+    else
+    {
+        <h5><label>Файл не загружен. Просьба его загрузить!</label></h5>
+    }
+}
+<h4>------------------------------------------------------------------------------------------------------------</h4>
+<h5>Введите ключ:</h5>
 @using (Html.BeginForm("Decrypting", "Home", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -35,18 +78,14 @@
 
     </div>
     <br>
-    <button type="submit" runat="server" id="btnLogin" >Расшифровать!</button>
+    <button type="submit" runat="server" id="btnLogin">Расшифровать!</button>
 }
 
-<h3>------------------------------------------------------------------------------------------------------------</h3>
-
-<h3>Файл можно забрать ниже ↓</h3>
-
-
-<h3>Выберите файл для загрузки</h3>
-@using (Html.BeginForm("Download", "Home"))
+<h4>------------------------------------------------------------------------------------------------------------</h4>
+<h4>Файл забрать ниже ↓</h4>
+@using (Html.BeginForm("DeDownload", "Home"))
 {
 
-    <input type="submit" value="скачать" />
+    <input type="submit" value="Скачать" />
 }
 

@@ -57,10 +57,14 @@ namespace WebApplication5.Controllers
             return View();
         }
 
-        public ViewResult CategoryChosen(string Mov)
+        
+        public ActionResult CategoryChosen(string lol)
         {
-            ViewBag.Message = Mov;
-            return View();
+            string result = "";
+            result = "Вы выбрали: " + lol;
+            return Content(result);
+
+            //return View();
         }
 
         public ActionResult About()
@@ -70,6 +74,7 @@ namespace WebApplication5.Controllers
             return View();
         }
 
+        
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
@@ -117,11 +122,24 @@ namespace WebApplication5.Controllers
             {
                 // получаем имя файла
                 //string fileName = System.IO.Path.GetFileName(upload.FileName);
-                string fileName = "forCrypt";
+                string fileName = "encrypt.txt";
                 // сохраняем файл в папку Files в проекте
                 upload.SaveAs(Server.MapPath("~/Files/" + fileName));
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Crypt");
+        }
+
+        public ActionResult DeUpload(HttpPostedFileBase deupload)
+        {
+            if (deupload != null)
+            {
+                // получаем имя файла
+                //string fileName = System.IO.Path.GetFileName(upload.FileName);
+                string fileName = "decrypt.txt";
+                // сохраняем файл в папку Files в проекте
+                deupload.SaveAs(Server.MapPath("~/Files/" + fileName));
+            }
+            return RedirectToAction("Decrypt");
         }
 
         //[HttpPost]
@@ -137,48 +155,77 @@ namespace WebApplication5.Controllers
 
         public ActionResult Download()
         {
-            
+            try
+            {
                 Response.ContentType = "text/txt";
-                Response.AppendHeader("Content-Disposition", "attachment; filename=Deshifrovka.txt");
-                Response.TransmitFile(Server.MapPath("~/Files/out.txt"));
+                Response.AppendHeader("Content-Disposition", "attachment; filename=encrypt.txt");
+                Response.TransmitFile(Server.MapPath("~/Files/encrypt_out.txt"));
                 Response.End();
-            
-            return RedirectToAction("Index");
+
+                FileInfo fi2 = new FileInfo(Server.MapPath("~/Files/encrypt_out.txt"));
+                fi2.Delete();
+                
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return View();
+        }
+
+        public ActionResult DeDownload()
+        {
+
+            Response.ContentType = "text/txt";
+            Response.AppendHeader("Content-Disposition", "attachment; filename=decrypt.txt");
+            Response.TransmitFile(Server.MapPath("~/Files/decrypt_out.txt"));
+            Response.End();
+
+
+            return View();
         }
 
         public ActionResult Encrypting(string parameterName)
         {
 
-            if (parameterName.Length > 0)//textBoxKeyWord.Text.Length > 0)
+            try
             {
-                string inputText = "";
-
-                var cipher = new VigenereCipher("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");
-
-                StreamReader sr = new StreamReader(Server.MapPath("~/Files/in.txt"));
-                StreamWriter sw = new StreamWriter(Server.MapPath("~/Files/out.txt"));
-
-                while (!sr.EndOfStream)
+                if (parameterName.Length > 0)//textBoxKeyWord.Text.Length > 0)
                 {
-                    inputText = sr.ReadLine().ToUpper();
-                    sw.Write(cipher.Encrypt(inputText, parameterName.ToUpper()));
+                    string inputText = "";
+
+                    var cipher = new VigenereCipher("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");
+
+                    StreamReader sr = new StreamReader(Server.MapPath("~/Files/encrypt.txt"));
+                    StreamWriter sw = new StreamWriter(Server.MapPath("~/Files/encrypt_out.txt"));
+
+                    while (!sr.EndOfStream)
+                    {
+                        inputText = sr.ReadLine().ToUpper();
+                        sw.Write(cipher.Encrypt(inputText, parameterName.ToUpper()));
+                    }
+
+                    //sw.WriteLine(cipher.Encrypt(inputText, parameterName));
+                    sr.Close();
+                    sw.Close();
+                }
+                else if (parameterName == null)
+                {
+                    Response.Write("<script>alert('Заполните поле ключ!')</script>");
+                }
+                else
+                {
+                    Response.Write("<script>alert('Заполните поле ключ!')</script>");
                 }
 
-                //sw.WriteLine(cipher.Encrypt(inputText, parameterName));
-                sr.Close();
-                sw.Close();
+                FileInfo fi2 = new FileInfo(Server.MapPath("~/Files/encrypt.txt"));
+                fi2.Delete();
             }
-            else if (parameterName == null)
+            catch(Exception ex)
             {
-                Response.Write("<script>alert('Заполните поле ключ!')</script>");
-            }
-            else
-            {
-                Response.Write("<script>alert('Заполните поле ключ!')</script>");
+
             }
 
-          
-            //return View();
             return RedirectToAction("Crypt");
         }
 
@@ -191,9 +238,9 @@ namespace WebApplication5.Controllers
 
                 var cipher = new VigenereCipher("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");
 
-                StreamReader sr = new StreamReader(Server.MapPath("~/Files/out.txt"));
+                StreamReader sr = new StreamReader(Server.MapPath("~/Files/decrypt.txt"));
                 //StreamReader sr = new StreamReader(Server.MapPath("~/Files/Result.docx"));
-                StreamWriter sw = new StreamWriter(Server.MapPath("~/Files/decrypt.txt"));
+                StreamWriter sw = new StreamWriter(Server.MapPath("~/Files/decrypt_out.txt"));
                 //StreamWriter sw = new StreamWriter(Server.MapPath("~/Files/Result1.docx"));
 
                 while (!sr.EndOfStream)
