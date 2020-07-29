@@ -56,15 +56,27 @@
 @{
     if (isReady == 2)
     {
-        <h5><label>@result</label></h5>
+        <h5>
+            <label>
+                <img src="~/Images/ok.PNG" width="38" height="41" /> @result
+            </label>
+        </h5>
     }
     else if (isReady == 1)
     {
-        <h5><label>@result , но он пуст</label></h5>
+        <h5>
+            <label>
+                <img src="~/Images/empty.PNG" width="38" height="41" />@result , но он пуст
+            </label>
+        </h5>
     }
     else
     {
-        <h5><label>Файл не загружен. Просьба его загрузить!</label></h5>
+        <h5>
+            <label>
+                <img src="~/Images/false.PNG" width="38" height="41" /> Файл не загружен. Просьба его загрузить!
+            </label>
+        </h5>
     }
 }
 <h4>------------------------------------------------------------------------------------------------------------</h4>

@@ -1,6 +1,30 @@
 ﻿
 @{
-   ViewBag.Title = "Crypt"; 
+    ViewBag.Title = "Crypt";
+
+    var text = "";
+    Array userData = null;
+
+
+    char[] delimiterChar = { ',' };
+
+    var dataFile = Server.MapPath("~/Files/encrypt.txt");
+
+
+    if (File.Exists(dataFile))
+    {
+        userData = File.ReadAllLines(dataFile);
+        if (userData == null)
+        {
+            // Empty file.
+            text = "Файл пуст.";
+        }
+    }
+    else
+    {
+        // File does not exist.
+        text = "      ";
+    }
 
 
     var chooseFile = Server.MapPath("~/Files/encrypt.txt");
@@ -33,52 +57,125 @@
 
 }
 
-        <font color=Red><h2>На этой странице вы можете зашифровать файл!</h2></font>
+
+<h5> </h5>
 
 
-            <h3>Выберите файл для загрузки и последующей зашифровки</h3>
-            @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                <input type="file" name="upload" />
-                <br>
-                <input type="submit" value="Загрузить" />
 
-            }
-            <h4>------------------------------------------------------------------------------------------------------------</h4>
-            @{
-                if (isReady == 2)
-                {
-                    <h5><label>@result</label></h5>
-                }
-                else if (isReady == 1)
-                {
-                    <h5><label>@result , но он пуст</label></h5>
-                }
-                else
-                {
-                    <h5><label>Файл не загружен. Просьба его загрузить!</label></h5>
-                }
-            }
-            <h4>------------------------------------------------------------------------------------------------------------</h4>
-            <h5>Введите ключ:</h5>
-            @using (Html.BeginForm("Encrypting", "Home", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                <div class="form-horizontal">
-                    <!-- атрибут name такой же как в контроллере у метода параметр -->
-                    <input type="text" name="parameterName" id="ls" />
+<h3>Выберите файл для загрузки</h3>
+@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="upload" />
+    <br>
+    <input type="submit" value="Загрузить" />
 
+}
+<h4>------------------------------------------------------------------------------------------------------------</h4>
+@{
+    if (isReady == 2)
+    {
+        <h5>
+            <label>
+                <img src="~/Images/ok.PNG" width="38" height="41" /> @result
+            </label>
+        </h5>
+
+
+    }
+    else if (isReady == 1)
+    {
+        <h5>
+            <label>
+                <img src="~/Images/empty.PNG" width="38" height="41" />@result , но он пуст
+            </label>
+        </h5>
+    }
+    else
+    {
+        <h5>
+            <label>
+                <img src="~/Images/false.PNG" width="38" height="41" /> Файл не загружен. Просьба его загрузить!
+            </label>
+        </h5>
+    }
+}
+
+
+<html>
+<head>
+    <title>Reading Data from a File</title>
+    <style>
+        .box1 {
+            background: #f0f0f0; /* Цвет фона */
+            width: 1140px; /* Ширина блока */
+            padding: 10px; /* Поля */
+            border: 2px solid #000; /* Параметры рамки */
+        }
+    </style>
+</head>
+<body>
+    <div>
+
+        @text
+        @if (text == "")
+        {
+            <details>
+                <summary>Текст файла</summary>
+                <div class="box1">
+                    @foreach (string dataLine in userData)
+                    {
+
+                        foreach (string dataItem in dataLine.Split(delimiterChar))
+                        {
+                            @dataItem
+                        }
+
+
+                    }
                 </div>
-                <br>
-                <button type="submit" runat="server" id="btnLogin">Зашифровать!</button>
-                //Response.Write("<script>alert('Успешно зашифрован!')</script>");
-            }
+            </details>
+        }
 
-            <h4>------------------------------------------------------------------------------------------------------------</h4>
-            <h4>Файл забрать ниже ↓</h4>
-            @using (Html.BeginForm("Download", "Home"))
-            {
-                <input type="submit" value="Скачать" />
+    </div>
+</body>
+</html>
 
-            }
+@using (Html.BeginForm("Encrypting", "Home", FormMethod.Post))
+{
+    if (isReady == 2)
+    {
+
+        <h4>------------------------------------------------------------------------------------------------------------</h4>
+        <h5>Введите ключ:</h5>
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <!-- атрибут name такой же как в контроллере у метода параметр -->
+            <input type="text" name="parameterName" id="ls" />
+
+        </div>
+        <br>
+        <button type="submit" runat="server" id="btnLogin">Зашифровать!</button>
+        //Response.Write("<script>alert('Успешно зашифрован!')</script>");
+        <h4>------------------------------------------------------------------------------------------------------------</h4>
+        <h4>Файл забрать ниже ↓</h4>
+    }
+    else
+    {
+
+    }
+
+}
+
+@using (Html.BeginForm("Download", "Home"))
+{
+    if (isReady == 2)
+    {
+        <input type="submit" value="Скачать" />
+    }
+    else
+    {
+
+    }
+
+}
 
