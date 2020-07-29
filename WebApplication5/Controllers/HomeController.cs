@@ -304,24 +304,71 @@ namespace WebApplication5.Controllers
 
             if (parameterName.Length > 0)//textBoxKeyWord.Text.Length > 0)
             {
-                string inputText = "";
+                string m = System.IO.File.ReadAllText(Server.MapPath("~/Files/decrypt.txt"));
+                string k = parameterName;
 
-                var cipher = new VigenereCipher("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");
+                int nomer; // Номер в алфавите
+                int d; // Смещение
+                string s; //Результат
+                int j, f; // Переменная для циклов
+                int t = 0; // Преременная для нумерации символов ключа.
 
-                StreamReader sr = new StreamReader(Server.MapPath("~/Files/decrypt.txt"));
-                //StreamReader sr = new StreamReader(Server.MapPath("~/Files/Result.docx"));
-                StreamWriter sw = new StreamWriter(Server.MapPath("~/Files/decrypt_out.txt"));
-                //StreamWriter sw = new StreamWriter(Server.MapPath("~/Files/Result1.docx"));
+                char[] massage = m.ToCharArray(); // Превращаем сообщение в массив символов.
+                char[] key = k.ToCharArray(); // Превращаем ключ в массив символов.
 
-                while (!sr.EndOfStream)
+                char[] alfavit = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
+
+                // Перебираем каждый символ сообщения
+                for (int i = 0; i < massage.Length; i++)
                 {
-                    inputText = sr.ReadLine().ToUpper();
-                    sw.Write(cipher.Decrypt(inputText, parameterName.ToUpper()));
+                    // Ищем индекс буквы
+                    for (j = 0; j < alfavit.Length; j++)
+                    {
+                        if (massage[i] == alfavit[j])
+                        {
+                            break;
+                        }
+                    }
+
+                    if (j != 33) // Если j равно 33, значит символ не из алфавита
+                    {
+                        nomer = j; // Индекс буквы
+
+                        // Ключ закончился - начинаем сначала.
+                        if (t > key.Length - 1) { t = 0; }
+
+                        // Ищем индекс буквы ключа
+                        for (f = 0; f < alfavit.Length; f++)
+                        {
+                            if (key[t] == alfavit[f])
+                            {
+                                break;
+                            }
+                        }
+
+                        t++;
+
+                        if (f != 33) // Если f равно 33, значит символ не из алфавита
+                        {
+                            d = nomer + alfavit.Length - f;
+                        }
+                        else
+                        {
+                            d = nomer;
+                        }
+
+                        // Проверяем, чтобы не вышли за пределы алфавита
+                        if (d > 32)
+                        {
+                            d = d - 33;
+                        }
+
+                        massage[i] = alfavit[d]; // Меняем букву
+                    }
                 }
 
-                //sw.WriteLine(cipher.Encrypt(inputText, parameterName));
-                sr.Close();
-                sw.Close();
+                s = new string(massage); // Собираем символы обратно в строку.
+                System.IO.File.WriteAllText(Server.MapPath("~/Files/decrypt_out.txt"), s);
             }
             else if (parameterName == null)
             {
