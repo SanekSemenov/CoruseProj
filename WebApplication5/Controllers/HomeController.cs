@@ -20,6 +20,9 @@ namespace WebApplication5.Controllers
         public static string wordtxt = "";
         public static string wordtxt_out = "";
 
+        public static string dewordtxt = "";
+        public static string dewordtxt_out = "";
+
         public class User
         {
             public int Id { get; set; }
@@ -107,6 +110,34 @@ namespace WebApplication5.Controllers
             
             return View();
         }
+
+        public ActionResult DecryptWORD()
+        {
+            ViewBag.Message = "Your application description page.";
+            try
+            {
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/decrypt_word.docx"), true))
+                {
+                    DocumentFormat.OpenXml.Wordprocessing.Body body
+                        = wordDoc.MainDocumentPart.Document.Body;
+                    dewordtxt = body.InnerText;
+                }
+
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/decrypt_word_out.docx"), true))
+                {
+                    DocumentFormat.OpenXml.Wordprocessing.Body body
+                        = wordDoc.MainDocumentPart.Document.Body;
+                    dewordtxt_out = body.InnerText;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+            return View();
+        }
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
@@ -161,15 +192,15 @@ namespace WebApplication5.Controllers
             return RedirectToAction("Crypt");
         }
 
-        public ActionResult UploadWORD(HttpPostedFileBase upload)
+        public ActionResult UploadWORD(HttpPostedFileBase uploadword)
         {
-            if (upload != null)
+            if (uploadword != null)
             {
                 // получаем имя файла
                 //string fileName = System.IO.Path.GetFileName(upload.FileName);
                 string fileName = "1.docx";
                 // сохраняем файл в папку Files в проекте
-                upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+                uploadword.SaveAs(Server.MapPath("~/Files/" + fileName));
             }
             return RedirectToAction("CryptWORD");
         }
@@ -187,6 +218,18 @@ namespace WebApplication5.Controllers
             return RedirectToAction("Decrypt");
         }
 
+        public ActionResult DeUploadWORD(HttpPostedFileBase deuploadword)
+        {
+            if (deuploadword != null)
+            {
+                // получаем имя файла
+                //string fileName = System.IO.Path.GetFileName(upload.FileName);
+                string fileName = "decrypt_word.docx";
+                // сохраняем файл в папку Files в проекте
+                deuploadword.SaveAs(Server.MapPath("~/Files/" + fileName));
+            }
+            return RedirectToAction("DecryptWORD");
+        }
         //[HttpPost]
         //public ActionResult Show(string parameterName)
         //{
@@ -245,6 +288,7 @@ namespace WebApplication5.Controllers
             return View();
         }
 
+
         public ActionResult DeDownload()
         {
 
@@ -259,6 +303,30 @@ namespace WebApplication5.Controllers
             FileInfo fi2 = new FileInfo(Server.MapPath("~/Files/decrypt_out.txt"));
             fi2.Delete();
 
+            return View();
+        }
+
+        public ActionResult DeDownloadword()
+        {
+            try
+            {
+                //Response.ContentType = "text/txt";
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                Response.AppendHeader("Content-Disposition", "attachment; filename=encrypt.docx");
+                Response.TransmitFile(Server.MapPath("~/Files/decrypt_word_out.docx"));
+                Response.End();
+
+
+                FileInfo fi1 = new FileInfo(Server.MapPath("~/Files/decrypt_word.docx"));
+                fi1.Delete();
+                FileInfo fi2 = new FileInfo(Server.MapPath("~/Files/decrypt_word_out.docx"));
+                fi2.Delete();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
             return View();
         }
 
@@ -556,6 +624,108 @@ namespace WebApplication5.Controllers
             return RedirectToAction("CryptWORD");
         }
 
+
+        public ActionResult DecryptingWord(string keyword999)
+        {
+
+
+            string totaltext = "";
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/decrypt_word.docx"), true))
+            {
+                DocumentFormat.OpenXml.Wordprocessing.Body body
+                    = wordDoc.MainDocumentPart.Document.Body;
+                totaltext = body.InnerText;
+            }
+
+            string m = totaltext; //File.ReadAllText("1.docx");
+            string k = keyword999;
+
+            int nomer; // Номер в алфавите
+            int d; // Смещение
+            string s; //Результат
+            int j, f; // Переменная для циклов
+            int t = 0; // Преременная для нумерации символов ключа.
+
+            char[] massage = m.ToCharArray(); // Превращаем сообщение в массив символов.
+            char[] key = k.ToCharArray(); // Превращаем ключ в массив символов.
+
+            char[] alfavit = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
+
+            // Перебираем каждый символ сообщения
+            for (int i = 0; i < massage.Length; i++)
+            {
+                // Ищем индекс буквы
+                for (j = 0; j < alfavit.Length; j++)
+                {
+                    if (massage[i] == alfavit[j])
+                    {
+                        break;
+                    }
+                }
+
+                if (j != 33) // Если j равно 33, значит символ не из алфавита
+                {
+                    nomer = j; // Индекс буквы
+                    // Ключ закончился - начинаем сначала.
+                    if (t > key.Length - 1) { t = 0; }
+
+                    // Ищем индекс буквы ключа
+                    for (f = 0; f < alfavit.Length; f++)
+                    {
+                        if (key[t] == alfavit[f])
+                        {
+                            break;
+                        }
+                    }
+
+                    t++;
+
+                    if (f != 33) // Если f равно 33, значит символ не из алфавита
+                    {
+                        d = nomer + alfavit.Length - f;
+                        //d = nomer + f;
+                        //Console.WriteLine("f = " + f);
+                        //Console.WriteLine(d);
+                    }
+                    else
+                    {
+                        d = nomer;
+                    }
+
+                    // Проверяем, чтобы не вышли за пределы алфавита
+                    if (d > 32)
+                    {
+                        d = d - 33;
+                    }
+                    //Console.WriteLine(d);
+                    massage[i] = alfavit[d]; // Меняем букву
+                }
+            }
+
+            s = new string(massage); // Собираем символы обратно в строку.
+            //Console.WriteLine(s);
+            //File.WriteAllText("3.docx", s); // Записываем результат в файл.
+
+
+            // Create Document
+            using (WordprocessingDocument wordDocument =
+                WordprocessingDocument.Create(Server.MapPath("~/Files/decrypt_word_out.docx"), WordprocessingDocumentType.Document))
+            {
+                // Add a main document part. 
+                MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+
+                // Create the document structure and add some text.
+                mainPart.Document = new Document();
+                Body body = mainPart.Document.AppendChild(new Body());
+                Paragraph para = body.AppendChild(new Paragraph());
+                Run run = para.AppendChild(new Run());
+                run.AppendChild(new Text(s));
+                mainPart.Document.Save();
+            }
+
+
+            return RedirectToAction("DecryptWORD");
+        }
 
 
     }

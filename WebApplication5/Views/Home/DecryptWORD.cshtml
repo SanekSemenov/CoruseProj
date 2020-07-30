@@ -1,8 +1,8 @@
 ﻿
 @{
-    ViewBag.Title = "CryptWORD";
-    string qwert = WebApplication5.Controllers.HomeController.wordtxt;
-    string qwert_out = WebApplication5.Controllers.HomeController.wordtxt_out;
+    ViewBag.Title = "DecryptWORD";
+    string qwert = WebApplication5.Controllers.HomeController.dewordtxt;
+    string qwert_out = WebApplication5.Controllers.HomeController.dewordtxt_out;
     var text = "";
     Array userData = null;
     var result = "";
@@ -12,13 +12,11 @@
 
     char[] delimiterChar = { ',' };
 
-    var dataFile = Server.MapPath("~/Files/1.docx");
-    var goodFile = Server.MapPath("~/Files/3.docx");
+    var dataFile = Server.MapPath("~/Files/decrypt_word.docx");
+    var goodFile = Server.MapPath("~/Files/decrypt_word_out.docx");
     string crypty = "";
 
-    string totaltext = "";
-    string totaltext_OUT = "";
-
+   
 
     if (File.Exists(dataFile))
     {
@@ -47,9 +45,9 @@
 
 <h3>Выберите файл для загрузки</h3>
 
-@using (Html.BeginForm("UploadWORD", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("DeUploadWORD", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <input type="file" name="uploadword" />
+    <input type="file" name="deuploadword" />
     <br>
     <input type="submit" value="Загрузить" />
 
@@ -109,7 +107,7 @@
 </body>
 </html>
 
-@using (Html.BeginForm("EncryptingWORD", "Home", FormMethod.Post))
+@using (Html.BeginForm("DecryptingWord", "Home", FormMethod.Post))
 {
     if (isReady == 2)
     {
@@ -119,7 +117,7 @@
         @Html.AntiForgeryToken()
         <div class="form-horizontal">
             <!-- атрибут name такой же как в контроллере у метода параметр -->
-            <input type="text" name="keyword" id="ls" />
+            <input type="text" name="keyword999" id="ls" />
 
         </div>
         <br>
@@ -153,9 +151,9 @@
                         <details>
                             <summary>Текст в зашифрованном виде: </summary>
                             <div class="box1">
-                                
+
                                 @qwert_out
-                                
+
                             </div>
                         </details>
                     }
@@ -174,7 +172,7 @@ else
 
 }
 
-@using (Html.BeginForm("Downloadword", "Home"))
+@using (Html.BeginForm("DeDownloadword", "Home"))
 {
     if (crypty == "" & isReady == 2)
     {
@@ -183,7 +181,7 @@ else
     }
     else
     {
-        
+
     }
 
 }

@@ -186,6 +186,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\DeUpload.cshtml" />
     <Content Include="Views\Home\CryptWORD.cshtml" />
+    <Content Include="Views\Home\DecryptWORD.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
