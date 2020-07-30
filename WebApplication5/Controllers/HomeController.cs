@@ -23,32 +23,10 @@ namespace WebApplication5.Controllers
         public static string dewordtxt = "";
         public static string dewordtxt_out = "";
 
-        public class User
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public int Age { get; set; }
-        }
-
         public class Files
         {
             public int Id { get; set; }
             public string Name { get; set; }
-        }
-
-        public ActionResult Create()
-        {
-            List<User> users = new List<User>
-        {
-            new User {Id=1, Name="Tom", Age=35 },
-            new User {Id=2, Name="Alice", Age=29 },
-            new User {Id=3, Name="Sam", Age=36 },
-            new User {Id=4, Name="Bob", Age=31 },
-        };
-            ViewBag.Users = new SelectList(users, "Id", "Name");
-            ViewData["Users"] = new SelectList(users, "Id", "Name");
-                       
-            return View();
         }
 
         public ActionResult Index()
@@ -107,12 +85,6 @@ namespace WebApplication5.Controllers
             {
 
             }
-
-            return View();
-        }
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
 
             return View();
         }

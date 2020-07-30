@@ -182,7 +182,6 @@
     <Content Include="Views\Home\Upload.cshtml" />
     <Content Include="Views\Home\Crypt.cshtml" />
     <Content Include="Views\Home\Decrypt.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\DeUpload.cshtml" />
     <Content Include="Views\Home\CryptWORD.cshtml" />
     <Content Include="Views\Home\DecryptWORD.cshtml" />
