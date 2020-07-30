@@ -216,7 +216,7 @@ else
 
 @using (Html.BeginForm("Download", "Home"))
 {
-    if (crypty == "")
+    if (crypty == "" && isReady == 2)
     {   
         <h4>Файл забрать ниже ↓</h4>
         <input type="submit" value="Скачать" />

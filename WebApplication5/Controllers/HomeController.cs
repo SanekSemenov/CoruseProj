@@ -7,6 +7,9 @@ using System.Text;
 using System.IO;
 using System.Web.UI.WebControls;
 using System.Management.Instrumentation;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace WebApplication5.Controllers
 {
@@ -14,6 +17,9 @@ namespace WebApplication5.Controllers
     {
         public static List<string> selectList = new List<string>();
         public static DropDownList ddl = new DropDownList();
+        public static string wordtxt = "";
+        public static string wordtxt_out = "";
+
         public class User
         {
             public int Id { get; set; }
@@ -74,7 +80,33 @@ namespace WebApplication5.Controllers
             return View();
         }
 
-        
+        public ActionResult CryptWORD()
+        {
+            ViewBag.Message = "Your application description page.";
+            try
+            {
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/1.docx"), true))
+                {
+                    DocumentFormat.OpenXml.Wordprocessing.Body body
+                        = wordDoc.MainDocumentPart.Document.Body;
+                    wordtxt = body.InnerText;
+                }
+
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/3.docx"), true))
+                {
+                    DocumentFormat.OpenXml.Wordprocessing.Body body
+                        = wordDoc.MainDocumentPart.Document.Body;
+                    wordtxt_out = body.InnerText;
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            
+            return View();
+        }
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
@@ -83,7 +115,7 @@ namespace WebApplication5.Controllers
             selectList.Add("2");
            foreach(var el in selectList)
             {
-                ddl.Items.Add(new ListItem(el));
+                ddl.Items.Add(new System.Web.UI.WebControls.ListItem(el));
             }
 
             List<Files> files = new List<Files>();
@@ -129,6 +161,19 @@ namespace WebApplication5.Controllers
             return RedirectToAction("Crypt");
         }
 
+        public ActionResult UploadWORD(HttpPostedFileBase upload)
+        {
+            if (upload != null)
+            {
+                // получаем имя файла
+                //string fileName = System.IO.Path.GetFileName(upload.FileName);
+                string fileName = "1.docx";
+                // сохраняем файл в папку Files в проекте
+                upload.SaveAs(Server.MapPath("~/Files/" + fileName));
+            }
+            return RedirectToAction("CryptWORD");
+        }
+
         public ActionResult DeUpload(HttpPostedFileBase deupload)
         {
             if (deupload != null)
@@ -170,6 +215,30 @@ namespace WebApplication5.Controllers
                 
             }
             catch(Exception ex)
+            {
+
+            }
+            return View();
+        }
+
+        public ActionResult Downloadword()
+        {
+            try
+            {
+                //Response.ContentType = "text/txt";
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                Response.AppendHeader("Content-Disposition", "attachment; filename=encrypt.docx");
+                Response.TransmitFile(Server.MapPath("~/Files/3.docx"));
+                Response.End();
+
+
+                FileInfo fi1 = new FileInfo(Server.MapPath("~/Files/1.docx"));
+                fi1.Delete();
+                FileInfo fi2 = new FileInfo(Server.MapPath("~/Files/3.docx"));
+                fi2.Delete();
+
+            }
+            catch (Exception ex)
             {
 
             }
@@ -385,61 +454,113 @@ namespace WebApplication5.Controllers
         }
 
 
+        public ActionResult EncryptingWord(string keyword)
+        {
+
+
+            string totaltext = "";
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/1.docx"), true))
+            {
+                DocumentFormat.OpenXml.Wordprocessing.Body body
+                    = wordDoc.MainDocumentPart.Document.Body;
+                totaltext = body.InnerText;
+            }
+
+            string m = totaltext; //File.ReadAllText("1.docx");
+            string k = keyword;
+
+            int nomer; // Номер в алфавите
+            int d; // Смещение
+            string s; //Результат
+            int j, f; // Переменная для циклов
+            int t = 0; // Преременная для нумерации символов ключа.
+
+            char[] massage = m.ToCharArray(); // Превращаем сообщение в массив символов.
+            char[] key = k.ToCharArray(); // Превращаем ключ в массив символов.
+
+            char[] alfavit = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
+
+            // Перебираем каждый символ сообщения
+            for (int i = 0; i < massage.Length; i++)
+            {
+                // Ищем индекс буквы
+                for (j = 0; j < alfavit.Length; j++)
+                {
+                    if (massage[i] == alfavit[j])
+                    {
+                        break;
+                    }
+                }
+
+                if (j != 33) // Если j равно 33, значит символ не из алфавита
+                {
+                    nomer = j; // Индекс буквы
+                    // Ключ закончился - начинаем сначала.
+                    if (t > key.Length - 1) { t = 0; }
+
+                    // Ищем индекс буквы ключа
+                    for (f = 0; f < alfavit.Length; f++)
+                    {
+                        if (key[t] == alfavit[f])
+                        {
+                            break;
+                        }
+                    }
+
+                    t++;
+
+                    if (f != 33) // Если f равно 33, значит символ не из алфавита
+                    {
+                        //d = nomer + alfavit.Length - f;
+                         d = nomer + f;
+                        //Console.WriteLine("f = " + f);
+                        //Console.WriteLine(d);
+                    }
+                    else
+                    {
+                        d = nomer;
+                    }
+
+                    // Проверяем, чтобы не вышли за пределы алфавита
+                    if (d > 32)
+                    {
+                        d = d - 33;
+                    }
+                    //Console.WriteLine(d);
+                    massage[i] = alfavit[d]; // Меняем букву
+                }
+            }
+
+            s = new string(massage); // Собираем символы обратно в строку.
+            //Console.WriteLine(s);
+            //File.WriteAllText("3.docx", s); // Записываем результат в файл.
+
+
+            // Create Document
+            using (WordprocessingDocument wordDocument =
+                WordprocessingDocument.Create(Server.MapPath("~/Files/3.docx"), WordprocessingDocumentType.Document))
+            {
+                // Add a main document part. 
+                MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+
+                // Create the document structure and add some text.
+                mainPart.Document = new Document();
+                Body body = mainPart.Document.AppendChild(new Body());
+                Paragraph para = body.AppendChild(new Paragraph());
+                Run run = para.AppendChild(new Run());
+                run.AppendChild(new Text(s));
+                mainPart.Document.Save();
+            }
+
+        
+            return RedirectToAction("CryptWORD");
+        }
+
+
 
     }
 
-    public class VigenereCipher
-    {
-        const string defaultAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        readonly string letters;
 
-        public VigenereCipher(string alphabet = null)
-        {
-            letters = string.IsNullOrEmpty(alphabet) ? defaultAlphabet : alphabet;
-        }
-
-        //генерация повторяющегося пароля
-        private string GetRepeatKey(string s, int n)
-        {
-            var p = s;
-            while (p.Length < n)
-            {
-                p += p;
-            }
-
-            return p.Substring(0, n);
-        }
-
-        private string Vigenere(string text, string password, bool encrypting = true)
-        {
-            var gamma = GetRepeatKey(password, text.Length);
-            var retValue = "";
-            var q = letters.Length;
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                var letterIndex = letters.IndexOf(text[i]);
-                var codeIndex = letters.IndexOf(gamma[i]);
-                if (letterIndex < 0)
-                {
-                    //если буква не найдена, добавляем её в исходном виде
-                    retValue += text[i].ToString();
-                }
-                else
-                {
-                    retValue += letters[(q + letterIndex + ((encrypting ? 1 : -1) * codeIndex)) % q].ToString();
-                }
-            }
-
-            return retValue;
-        }
-
-        //шифрование текста
-        public string Encrypt(string plainMessage, string password)
-            => Vigenere(plainMessage, password);
-
-        //дешифрование текста
-        public string Decrypt(string encryptedMessage, string password)
-            => Vigenere(encryptedMessage, password, false);
-    }
+       
+    
 }
