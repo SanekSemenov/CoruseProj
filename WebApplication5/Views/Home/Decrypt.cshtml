@@ -65,6 +65,9 @@
 
 }
 
+<br />
+<strong>Дешифровка txt файла</strong>
+<hr />
 <h4>Загрузите файл формата <font color="red">txt</font> для дешифрования информации в нем</h4>
 
 @using (Html.BeginForm("DeUpload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -150,7 +153,7 @@
         @Html.AntiForgeryToken()
         <div class="form-horizontal">
             <!-- атрибут name такой же как в контроллере у метода параметр -->
-            <input type="text" name="parameterName" id="ls" />
+            <input type="text" name="key_decrypt_txt" id="ls" />
 
         </div>
         <br>
@@ -195,9 +198,9 @@
                         </details>
                     }
 
-                    </div>
-                </body>
-            </html>
+                </div>
+            </body>
+        </html>
 
     }
 }

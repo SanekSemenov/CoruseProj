@@ -16,7 +16,7 @@
     var goodFile = Server.MapPath("~/Files/decrypt_word_out.docx");
     string crypty = "";
 
-   
+
 
     if (File.Exists(dataFile))
     {
@@ -43,6 +43,9 @@
 }
 
 
+<br />
+<strong>Дешифровка docx файла</strong>
+<hr />
 <h4>Загрузите файл формата <font color="red">docx</font> для дешифрования информации в нем</h4>
 
 @using (Html.BeginForm("DeUploadWORD", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -117,7 +120,7 @@
         @Html.AntiForgeryToken()
         <div class="form-horizontal">
             <!-- атрибут name такой же как в контроллере у метода параметр -->
-            <input type="text" name="keyword999" id="ls" />
+            <input type="text" name="key_decrypt_word" id="ls" />
 
         </div>
         <br>

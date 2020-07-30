@@ -47,55 +47,29 @@ namespace WebApplication5.Controllers
         };
             ViewBag.Users = new SelectList(users, "Id", "Name");
             ViewData["Users"] = new SelectList(users, "Id", "Name");
-
-            //List<Files> files = new List<Files>();
-            //string folderPath = Server.MapPath("~/Files/");
-            //string[] filePaths = Directory.GetFiles(folderPath, "*.txt");
-            //List<string> CollectionFileNames = new List<string>();
-            //for (int i = 0; i < filePaths.Length; i++)
-            //{
-            //    files.Add(new Files() { Id = i, Name = Path.GetFileName(filePaths[i]) }); ;
-            //}
-
-            //ViewBag.Users = new SelectList(files, "Id", "Name");
+                       
             return View();
         }
 
         public ActionResult Index()
         {
+            ViewBag.Message = "Hello world!";
             return View();
         }
-
         
-        public ActionResult CategoryChosen(string lol)
-        {
-            string result = "";
-            result = "Вы выбрали: " + lol;
-            return Content(result);
-
-            //return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
         public ActionResult CryptWORD()
         {
             ViewBag.Message = "Your application description page.";
             try
             {
-                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/1.docx"), true))
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/encrypt.docx"), true))
                 {
                     DocumentFormat.OpenXml.Wordprocessing.Body body
                         = wordDoc.MainDocumentPart.Document.Body;
                     wordtxt = body.InnerText;
                 }
 
-                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/3.docx"), true))
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/encrypt_out.docx"), true))
                 {
                     DocumentFormat.OpenXml.Wordprocessing.Body body
                         = wordDoc.MainDocumentPart.Document.Body;
@@ -106,7 +80,6 @@ namespace WebApplication5.Controllers
             {
 
             }
-
             
             return View();
         }
@@ -135,35 +108,14 @@ namespace WebApplication5.Controllers
 
             }
 
-
             return View();
         }
         public ActionResult Contact()
         {
-            /*ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Your contact page.";
 
-            selectList.Add("1");
-            selectList.Add("2");
-           foreach(var el in selectList)
-            {
-                ddl.Items.Add(new System.Web.UI.WebControls.ListItem(el));
-            }
-
-            List<Files> files = new List<Files>();
-            string folderPath = Server.MapPath("~/Files/");
-            string[] filePaths = Directory.GetFiles(folderPath, "*.txt");
-            List<string> CollectionFileNames = new List<string>();
-            for (int i = 0; i < filePaths.Length; i++)
-            {
-                files.Add(new Files() { Id = i, Name = Path.GetFileName(filePaths[i]) }); ;
-            }
-
-            ViewBag.Users = new SelectList(files, "Id", "Name");
-            ViewData["Users"] = new SelectList(files, "Id", "Name");
-            */
             return View();
         }
-
 
         public ActionResult Crypt()
         {
@@ -183,10 +135,9 @@ namespace WebApplication5.Controllers
         {
             if (upload != null)
             {
-                // получаем имя файла
+                // Get file name
                 //string fileName = System.IO.Path.GetFileName(upload.FileName);
                 string fileName = "encrypt.txt";
-                // сохраняем файл в папку Files в проекте
                 upload.SaveAs(Server.MapPath("~/Files/" + fileName));
             }
             return RedirectToAction("Crypt");
@@ -198,8 +149,7 @@ namespace WebApplication5.Controllers
             {
                 // получаем имя файла
                 //string fileName = System.IO.Path.GetFileName(upload.FileName);
-                string fileName = "1.docx";
-                // сохраняем файл в папку Files в проекте
+                string fileName = "encrypt.docx";
                 uploadword.SaveAs(Server.MapPath("~/Files/" + fileName));
             }
             return RedirectToAction("CryptWORD");
@@ -240,12 +190,10 @@ namespace WebApplication5.Controllers
                 Response.TransmitFile(Server.MapPath("~/Files/encrypt_out.txt"));
                 Response.End();
 
-                
                 FileInfo fi1 = new FileInfo(Server.MapPath("~/Files/encrypt.txt"));
                 fi1.Delete();
                 FileInfo fi2 = new FileInfo(Server.MapPath("~/Files/encrypt_out.txt"));
                 fi2.Delete();
-                
             }
             catch(Exception ex)
             {
@@ -261,15 +209,13 @@ namespace WebApplication5.Controllers
                 //Response.ContentType = "text/txt";
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
                 Response.AppendHeader("Content-Disposition", "attachment; filename=encrypt.docx");
-                Response.TransmitFile(Server.MapPath("~/Files/3.docx"));
+                Response.TransmitFile(Server.MapPath("~/Files/encrypt_out.docx"));
                 Response.End();
 
-
-                FileInfo fi1 = new FileInfo(Server.MapPath("~/Files/1.docx"));
+                FileInfo fi1 = new FileInfo(Server.MapPath("~/Files/encrypt.docx"));
                 fi1.Delete();
-                FileInfo fi2 = new FileInfo(Server.MapPath("~/Files/3.docx"));
+                FileInfo fi2 = new FileInfo(Server.MapPath("~/Files/encrypt_out.docx"));
                 fi2.Delete();
-
             }
             catch (Exception ex)
             {
@@ -278,7 +224,6 @@ namespace WebApplication5.Controllers
             return View();
         }
 
-
         public ActionResult DeDownload()
         {
 
@@ -286,7 +231,6 @@ namespace WebApplication5.Controllers
             Response.AppendHeader("Content-Disposition", "attachment; filename=decrypt.txt");
             Response.TransmitFile(Server.MapPath("~/Files/decrypt_out.txt"));
             Response.End();
-
 
             FileInfo fi1 = new FileInfo(Server.MapPath("~/Files/decrypt.txt"));
             fi1.Delete();
@@ -300,49 +244,45 @@ namespace WebApplication5.Controllers
         {
             try
             {
-                //Response.ContentType = "text/txt";
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
                 Response.AppendHeader("Content-Disposition", "attachment; filename=encrypt.docx");
                 Response.TransmitFile(Server.MapPath("~/Files/decrypt_word_out.docx"));
                 Response.End();
 
-
                 FileInfo fi1 = new FileInfo(Server.MapPath("~/Files/decrypt_word.docx"));
                 fi1.Delete();
                 FileInfo fi2 = new FileInfo(Server.MapPath("~/Files/decrypt_word_out.docx"));
                 fi2.Delete();
-
             }
             catch (Exception ex)
             {
-
             }
             return View();
         }
 
-        public ActionResult Encrypting(string parameterName)
+        public ActionResult Encrypting(string key_crypt_txt)
         {
             string m = System.IO.File.ReadAllText(Server.MapPath("~/Files/encrypt.txt"));
-            string k = parameterName;
+            string k = key_crypt_txt;
             
-            int nomer; // Номер в алфавите
+            int number; // Номер в алфавите
             int d; // Смещение
             string s; //Результат
             int j, f; // Переменная для циклов
             int t = 0; // Преременная для нумерации символов ключа.
 
-            char[] massage = m.ToCharArray(); // Превращаем сообщение в массив символов.
+            char[] message = m.ToCharArray(); // Превращаем сообщение в массив символов.
             char[] key = k.ToCharArray(); // Превращаем ключ в массив символов.
 
-            char[] alfavit = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
+            char[] alphabet = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
 
             // Перебираем каждый символ сообщения
-            for (int i = 0; i < massage.Length; i++)
+            for (int i = 0; i < message.Length; i++)
             {
                 // Ищем индекс буквы
-                for (j = 0; j < alfavit.Length; j++)
+                for (j = 0; j < alphabet.Length; j++)
                 {
-                    if (massage[i] == alfavit[j])
+                    if (message[i] == alphabet[j])
                     {
                         break;
                     }
@@ -350,15 +290,15 @@ namespace WebApplication5.Controllers
 
                 if (j != 33) // Если j равно 33, значит символ не из алфавита
                 {
-                    nomer = j; // Индекс буквы
+                    number = j; // Индекс буквы
 
                     // Ключ закончился - начинаем сначала.
                     if (t > key.Length - 1) { t = 0; }
 
                     // Ищем индекс буквы ключа
-                    for (f = 0; f < alfavit.Length; f++)
+                    for (f = 0; f < alphabet.Length; f++)
                     {
-                        if (key[t] == alfavit[f])
+                        if (key[t] == alphabet[f])
                         {
                             break;
                         }
@@ -368,11 +308,11 @@ namespace WebApplication5.Controllers
 
                     if (f != 33) // Если f равно 33, значит символ не из алфавита
                     {
-                        d = nomer + f;
+                        d = number + f;
                     }
                     else
                     {
-                        d = nomer;
+                        d = number;
                     }
 
                     // Проверяем, чтобы не вышли за пределы алфавита
@@ -381,42 +321,41 @@ namespace WebApplication5.Controllers
                         d = d - 33;
                     }
 
-                    massage[i] = alfavit[d]; // Меняем букву
+                    message[i] = alphabet[d]; // Меняем букву
                 }
             }
 
-            s = new string(massage); // Собираем символы обратно в строку.
+            s = new string(message); // Собираем символы обратно в строку.
             System.IO.File.WriteAllText(Server.MapPath("~/Files/encrypt_out.txt"), s);
            
             return RedirectToAction("Crypt");
         }
 
-        public ActionResult Decrypting(string parameterName)
+        public ActionResult Decrypting(string key_decrypt_txt)
         {
 
-            if (parameterName.Length > 0)//textBoxKeyWord.Text.Length > 0)
+            if (key_decrypt_txt.Length > 0)//textBoxKeyWord.Text.Length > 0)
             {
                 string m = System.IO.File.ReadAllText(Server.MapPath("~/Files/decrypt.txt"));
-                string k = parameterName;
-
-                int nomer; // Номер в алфавите
+                string k = key_decrypt_txt;
+                int number; // Номер в алфавите
                 int d; // Смещение
                 string s; //Результат
                 int j, f; // Переменная для циклов
                 int t = 0; // Преременная для нумерации символов ключа.
 
-                char[] massage = m.ToCharArray(); // Превращаем сообщение в массив символов.
+                char[] message = m.ToCharArray(); // Превращаем сообщение в массив символов.
                 char[] key = k.ToCharArray(); // Превращаем ключ в массив символов.
 
-                char[] alfavit = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
+                char[] alphabet = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
 
                 // Перебираем каждый символ сообщения
-                for (int i = 0; i < massage.Length; i++)
+                for (int i = 0; i < message.Length; i++)
                 {
                     // Ищем индекс буквы
-                    for (j = 0; j < alfavit.Length; j++)
+                    for (j = 0; j < alphabet.Length; j++)
                     {
-                        if (massage[i] == alfavit[j])
+                        if (message[i] == alphabet[j])
                         {
                             break;
                         }
@@ -424,15 +363,15 @@ namespace WebApplication5.Controllers
 
                     if (j != 33) // Если j равно 33, значит символ не из алфавита
                     {
-                        nomer = j; // Индекс буквы
+                        number = j; // Индекс буквы
 
                         // Ключ закончился - начинаем сначала.
                         if (t > key.Length - 1) { t = 0; }
 
                         // Ищем индекс буквы ключа
-                        for (f = 0; f < alfavit.Length; f++)
+                        for (f = 0; f < alphabet.Length; f++)
                         {
-                            if (key[t] == alfavit[f])
+                            if (key[t] == alphabet[f])
                             {
                                 break;
                             }
@@ -442,11 +381,11 @@ namespace WebApplication5.Controllers
 
                         if (f != 33) // Если f равно 33, значит символ не из алфавита
                         {
-                            d = nomer + alfavit.Length - f;
+                            d = number + alphabet.Length - f;
                         }
                         else
                         {
-                            d = nomer;
+                            d = number;
                         }
 
                         // Проверяем, чтобы не вышли за пределы алфавита
@@ -455,14 +394,14 @@ namespace WebApplication5.Controllers
                             d = d - 33;
                         }
 
-                        massage[i] = alfavit[d]; // Меняем букву
+                        message[i] = alphabet[d]; // Меняем букву
                     }
                 }
 
-                s = new string(massage); // Собираем символы обратно в строку.
+                s = new string(message); // Собираем символы обратно в строку.
                 System.IO.File.WriteAllText(Server.MapPath("~/Files/decrypt_out.txt"), s);
             }
-            else if (parameterName == null)
+            else if (key_decrypt_txt == null)
             {
                 Response.Write("<script>alert('Заполните поле ключ!')</script>");
             }
@@ -470,120 +409,108 @@ namespace WebApplication5.Controllers
             {
                 Response.Write("<script>alert('Заполните поле ключ!')</script>");
             }
-
-
-            //return View();
             return RedirectToAction("Decrypt");
         }
 
-
-        public ActionResult EncryptingWord(string keyword)
+        public ActionResult EncryptingWord(string key_crypt_word)
         {
-
-
-            string totaltext = "";
-            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/1.docx"), true))
+            try
             {
-                DocumentFormat.OpenXml.Wordprocessing.Body body
-                    = wordDoc.MainDocumentPart.Document.Body;
-                totaltext = body.InnerText;
-            }
-
-            string m = totaltext; //File.ReadAllText("1.docx");
-            string k = keyword;
-
-            int nomer; // Номер в алфавите
-            int d; // Смещение
-            string s; //Результат
-            int j, f; // Переменная для циклов
-            int t = 0; // Преременная для нумерации символов ключа.
-
-            char[] massage = m.ToCharArray(); // Превращаем сообщение в массив символов.
-            char[] key = k.ToCharArray(); // Превращаем ключ в массив символов.
-
-            char[] alfavit = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
-
-            // Перебираем каждый символ сообщения
-            for (int i = 0; i < massage.Length; i++)
-            {
-                // Ищем индекс буквы
-                for (j = 0; j < alfavit.Length; j++)
+                string totaltext = "";
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/encrypt.docx"), true))
                 {
-                    if (massage[i] == alfavit[j])
-                    {
-                        break;
-                    }
+                    DocumentFormat.OpenXml.Wordprocessing.Body body
+                        = wordDoc.MainDocumentPart.Document.Body;
+                    totaltext = body.InnerText;
                 }
 
-                if (j != 33) // Если j равно 33, значит символ не из алфавита
-                {
-                    nomer = j; // Индекс буквы
-                    // Ключ закончился - начинаем сначала.
-                    if (t > key.Length - 1) { t = 0; }
+                string m = totaltext;
+                string k = key_crypt_word;
 
-                    // Ищем индекс буквы ключа
-                    for (f = 0; f < alfavit.Length; f++)
+                int number; // Номер в алфавите
+                int d; // Смещение
+                string s; //Результат
+                int j, f; // Переменная для циклов
+                int t = 0; // Преременная для нумерации символов ключа.
+
+                char[] message = m.ToCharArray(); // Превращаем сообщение в массив символов.
+                char[] key = k.ToCharArray(); // Превращаем ключ в массив символов.
+
+                char[] alphabet = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
+
+                // Перебираем каждый символ сообщения
+                for (int i = 0; i < message.Length; i++)
+                {
+                    // Ищем индекс буквы
+                    for (j = 0; j < alphabet.Length; j++)
                     {
-                        if (key[t] == alfavit[f])
+                        if (message[i] == alphabet[j])
                         {
                             break;
                         }
                     }
 
-                    t++;
+                    if (j != 33) // Если j равно 33, значит символ не из алфавита
+                    {
+                        number = j; // Индекс буквы
+                                    // Ключ закончился - начинаем сначала.
+                        if (t > key.Length - 1) { t = 0; }
 
-                    if (f != 33) // Если f равно 33, значит символ не из алфавита
-                    {
-                        //d = nomer + alfavit.Length - f;
-                         d = nomer + f;
-                        //Console.WriteLine("f = " + f);
-                        //Console.WriteLine(d);
-                    }
-                    else
-                    {
-                        d = nomer;
-                    }
+                        // Ищем индекс буквы ключа
+                        for (f = 0; f < alphabet.Length; f++)
+                        {
+                            if (key[t] == alphabet[f])
+                            {
+                                break;
+                            }
+                        }
 
-                    // Проверяем, чтобы не вышли за пределы алфавита
-                    if (d > 32)
-                    {
-                        d = d - 33;
+                        t++;
+
+                        if (f != 33) // Если f равно 33, значит символ не из алфавита
+                        {
+                            d = number + f;
+                        }
+                        else
+                        {
+                            d = number;
+                        }
+
+                        // Проверяем, чтобы не вышли за пределы алфавита
+                        if (d > 32)
+                        {
+                            d = d - 33;
+                        }
+                        message[i] = alphabet[d]; // Меняем букву
                     }
-                    //Console.WriteLine(d);
-                    massage[i] = alfavit[d]; // Меняем букву
+                }
+
+                s = new string(message); // Собираем символы обратно в строку.
+                                         // Create Document
+                using (WordprocessingDocument wordDocument =
+                    WordprocessingDocument.Create(Server.MapPath("~/Files/encrypt_out.docx"), WordprocessingDocumentType.Document))
+                {
+                    // Add a main document part. 
+                    MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+                    // Create the document structure and add some text.
+                    mainPart.Document = new Document();
+                    Body body = mainPart.Document.AppendChild(new Body());
+                    Paragraph para = body.AppendChild(new Paragraph());
+                    Run run = para.AppendChild(new Run());
+                    run.AppendChild(new Text(s));
+                    mainPart.Document.Save();
                 }
             }
-
-            s = new string(massage); // Собираем символы обратно в строку.
-            //Console.WriteLine(s);
-            //File.WriteAllText("3.docx", s); // Записываем результат в файл.
-
-
-            // Create Document
-            using (WordprocessingDocument wordDocument =
-                WordprocessingDocument.Create(Server.MapPath("~/Files/3.docx"), WordprocessingDocumentType.Document))
+            catch(Exception ex)
             {
-                // Add a main document part. 
-                MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
 
-                // Create the document structure and add some text.
-                mainPart.Document = new Document();
-                Body body = mainPart.Document.AppendChild(new Body());
-                Paragraph para = body.AppendChild(new Paragraph());
-                Run run = para.AppendChild(new Run());
-                run.AppendChild(new Text(s));
-                mainPart.Document.Save();
             }
-
-        
-            return RedirectToAction("CryptWORD");
+            return View("CryptWORD");
         }
 
 
-        public ActionResult DecryptingWord(string keyword999)
+        public ActionResult DecryptingWord(string key_decrypt_word)
         {
-
-
             string totaltext = "";
             using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/decrypt_word.docx"), true))
             {
@@ -593,26 +520,26 @@ namespace WebApplication5.Controllers
             }
 
             string m = totaltext; //File.ReadAllText("1.docx");
-            string k = keyword999;
+            string k = key_decrypt_word;
 
-            int nomer; // Номер в алфавите
+            int number; // Номер в алфавите
             int d; // Смещение
             string s; //Результат
             int j, f; // Переменная для циклов
             int t = 0; // Преременная для нумерации символов ключа.
 
-            char[] massage = m.ToCharArray(); // Превращаем сообщение в массив символов.
+            char[] message = m.ToCharArray(); // Превращаем сообщение в массив символов.
             char[] key = k.ToCharArray(); // Превращаем ключ в массив символов.
 
-            char[] alfavit = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
+            char[] alphabet = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
 
             // Перебираем каждый символ сообщения
-            for (int i = 0; i < massage.Length; i++)
+            for (int i = 0; i < message.Length; i++)
             {
                 // Ищем индекс буквы
-                for (j = 0; j < alfavit.Length; j++)
+                for (j = 0; j < alphabet.Length; j++)
                 {
-                    if (massage[i] == alfavit[j])
+                    if (message[i] == alphabet[j])
                     {
                         break;
                     }
@@ -620,14 +547,14 @@ namespace WebApplication5.Controllers
 
                 if (j != 33) // Если j равно 33, значит символ не из алфавита
                 {
-                    nomer = j; // Индекс буквы
+                    number = j; // Индекс буквы
                     // Ключ закончился - начинаем сначала.
                     if (t > key.Length - 1) { t = 0; }
 
                     // Ищем индекс буквы ключа
-                    for (f = 0; f < alfavit.Length; f++)
+                    for (f = 0; f < alphabet.Length; f++)
                     {
-                        if (key[t] == alfavit[f])
+                        if (key[t] == alphabet[f])
                         {
                             break;
                         }
@@ -637,14 +564,11 @@ namespace WebApplication5.Controllers
 
                     if (f != 33) // Если f равно 33, значит символ не из алфавита
                     {
-                        d = nomer + alfavit.Length - f;
-                        //d = nomer + f;
-                        //Console.WriteLine("f = " + f);
-                        //Console.WriteLine(d);
+                        d = number + alphabet.Length - f;
                     }
                     else
                     {
-                        d = nomer;
+                        d = number;
                     }
 
                     // Проверяем, чтобы не вышли за пределы алфавита
@@ -653,14 +577,11 @@ namespace WebApplication5.Controllers
                         d = d - 33;
                     }
                     //Console.WriteLine(d);
-                    massage[i] = alfavit[d]; // Меняем букву
+                    message[i] = alphabet[d]; // Меняем букву
                 }
             }
 
-            s = new string(massage); // Собираем символы обратно в строку.
-            //Console.WriteLine(s);
-            //File.WriteAllText("3.docx", s); // Записываем результат в файл.
-
+            s = new string(message); // Собираем символы обратно в строку.
 
             // Create Document
             using (WordprocessingDocument wordDocument =

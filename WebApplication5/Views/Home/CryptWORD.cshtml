@@ -12,8 +12,8 @@
 
     char[] delimiterChar = { ',' };
 
-    var dataFile = Server.MapPath("~/Files/1.docx");
-    var goodFile = Server.MapPath("~/Files/3.docx");
+    var dataFile = Server.MapPath("~/Files/encrypt.docx");
+    var goodFile = Server.MapPath("~/Files/encrypt_out.docx");
     string crypty = "";
 
     string totaltext = "";
@@ -44,6 +44,9 @@
 
 }
 
+<br />
+<strong>Шифровка docx файла</strong>
+<hr />
 <h4>Загрузите файл формата <font color="red">docx</font> для шифрования информации в нем</h4>
 
 @using (Html.BeginForm("UploadWORD", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -64,8 +67,6 @@
                 <img src="~/Images/ok.PNG" width="38" height="41" /> @result
             </label>
         </h5>
-
-
     }
 
     else
@@ -77,7 +78,6 @@
         </h5>
     }
 }
-
 
 <html>
 <head>
@@ -93,7 +93,6 @@
 </head>
 <body>
     <div>
-
         @if (isReady == 2)
         {
             <details>
@@ -103,7 +102,6 @@
                 </div>
             </details>
         }
-
     </div>
 </body>
 </html>
@@ -112,24 +110,19 @@
 {
     if (isReady == 2)
     {
-
         <h4>------------------------------------------------------------------------------------------------------------</h4>
         <h5>Введите ключ:</h5>
         @Html.AntiForgeryToken()
         <div class="form-horizontal">
             <!-- атрибут name такой же как в контроллере у метода параметр -->
-            <input type="text" name="keyword" id="ls" />
-
+            <input type="text" name="key_crypt_word" id="ls" />
         </div>
         <br>
         <button type="submit" runat="server" id="btnLogin">Зашифровать!</button>
         //Response.Write("<script>alert('Успешно зашифрован!')</script>");
-
         <br />
-
         if (crypty == "")
         {
-
             <html>
             <head>
                 <title>Reading Data from a File</title>
@@ -144,7 +137,6 @@
             </head>
             <body>
                 <div>
-
                     @crypty
                     @if (crypty == "")
                     {
@@ -152,19 +144,14 @@
                         <details>
                             <summary>Текст в зашифрованном виде: </summary>
                             <div class="box1">
-                                
                                 @qwert_out
-                                
                             </div>
                         </details>
                     }
-
                 </div>
             </body>
         </html>
-
     }
-
 }
 else
 {
@@ -182,8 +169,7 @@ else
     }
     else
     {
-        
-    }
 
+    }
 }
 
