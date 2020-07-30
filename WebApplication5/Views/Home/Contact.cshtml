@@ -1,73 +1,4 @@
-﻿@{
-  /*  var result = "";
-    var choosefileName = "";
-    Array userData = null;
-    Array userData1 = null;
-
-
-    char[] delimiterChar = { ',' };
-
-    var dataFile = Server.MapPath("~/Files/Result.txt");
-
-
-    if (File.Exists(dataFile))
-    {
-        userData = File.ReadAllLines(dataFile, System.Text.Encoding.GetEncoding("windows-1251"));
-        if (userData == null)
-        {
-            // Empty file.
-            result = "The file is empty.";
-        }
-    }
-    else
-    {
-        // File does not exist.
-        result = "The file does not exist.";
-    }
-
-    var dir = new DirectoryInfo(Server.MapPath("~/Files/")); // папка с файлами
-    Server.MapPath("~/Files/encrypt.txt");
-
-    var chooseFile = Server.MapPath("~/Files/encrypt.txt");
-
-
-    if (File.Exists(chooseFile))
-    {
-        userData1 = File.ReadAllLines(chooseFile, System.Text.Encoding.GetEncoding("windows-1251"));
-        if (userData1 == null)
-        {
-            // Empty file.
-            choosefileName = "The file is empty.";
-        }
-        else
-        {
-            choosefileName = "Файл выбран";
-        }
-    }
-    else
-    {
-        // File does not exist.
-        result = "The file does not exist.";
-    }
-
-    */
-}
-
-
-
-<h3>Выберите файл для загрузки</h3>
-@using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    <input type="file" name="upload" />
-    <br>
-    <input type="submit" value="Загрузить" />
-}
-
-<label name="1">Выбран файл: @choosefileName</label>
-
-<!DOCTYPE html>
-
-<html>
+﻿<html>
 <head>
     <title>Reading Data from a File</title>
     <style>
@@ -81,64 +12,9 @@
 </head>
 <body>
     <div>
-
-        <form name="test" method="post" action="Refresh">
-
-            <p>
-                <br></br>
-                <input type="submit" value="Отправить">
-            </p>
-        </form>
-
-        <h5>------------------------------------------------------------------------------------------------</h5>
-        <h3>Выберите файл из списка! </h3>
-
-
-
-        <!--using (Html.BeginForm("CategoryChosen", "Home", FormMethod.Post))-->
-
-        @using (Html.BeginForm("CategoryChosen", "Home", FormMethod.Post))
-        {
-            @Html.DropDownList(ViewData["Users"].ToString(), ViewBag.Users as SelectList)
-            <br>
-            <input type="submit" name="lol" />
-        }
-
-
-
-
-        <br></br>
-
-
-
-
-        <!--Html.DropDownList(ViewData["Users"].ToString(), ViewBag.Users as SelectList)-->
-
-        <br></br>
-
-
-        <h5>------------------------------------------------------------------------------------------------</h5>
-
-        @result
-        @if (result == "")
-        {
-            <details>
-                <summary>Текст файла</summary>
-                <div class="box1">
-                    @foreach (string dataLine in userData)
-                    {
-
-                        foreach (string dataItem in dataLine.Split(delimiterChar))
-                        {
-                            @dataItem
-                        }
-
-
-                    }
-                </div>
-            </details>
-        }
-
+        <CENTER>Эбаут</CENTER>
+        <hr width='60%' size=6'>
     </div>
+
 </body>
 </html>

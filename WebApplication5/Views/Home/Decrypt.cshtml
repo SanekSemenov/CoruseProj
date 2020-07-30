@@ -65,14 +65,13 @@
 
 }
 
-<h3>Загрузите файл!</h3>
+<h4>Загрузите файл формата <font color="red">txt</font> для дешифрования информации в нем</h4>
+
 @using (Html.BeginForm("DeUpload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <input type="file" name="deupload" />
     <br>
     <input type="submit" value="Загрузить" />
-
-
 }
 <h4>------------------------------------------------------------------------------------------------------------</h4>
 @{

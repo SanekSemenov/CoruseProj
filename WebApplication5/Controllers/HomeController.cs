@@ -140,7 +140,7 @@ namespace WebApplication5.Controllers
         }
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            /*ViewBag.Message = "Your contact page.";
 
             selectList.Add("1");
             selectList.Add("2");
@@ -160,7 +160,7 @@ namespace WebApplication5.Controllers
 
             ViewBag.Users = new SelectList(files, "Id", "Name");
             ViewData["Users"] = new SelectList(files, "Id", "Name");
-
+            */
             return View();
         }
 
@@ -230,17 +230,7 @@ namespace WebApplication5.Controllers
             }
             return RedirectToAction("DecryptWORD");
         }
-        //[HttpPost]
-        //public ActionResult Show(string parameterName)
-        //{
-        //    // тут что то делаешь с этим параметром.
-        //    Response.Write("<script>alert('" + parameterName + "')</script>");
-        //    key = parameterName;
-        //    return View();
-
-        //}
-
-
+       
         public ActionResult Download()
         {
             try
@@ -397,42 +387,7 @@ namespace WebApplication5.Controllers
 
             s = new string(massage); // Собираем символы обратно в строку.
             System.IO.File.WriteAllText(Server.MapPath("~/Files/encrypt_out.txt"), s);
-            /* try
-             {
-                 if (parameterName.Length > 0)//textBoxKeyWord.Text.Length > 0)
-                 {
-                     string inputText = "";
-
-                     var cipher = new VigenereCipher("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ");
-
-                     StreamReader sr = new StreamReader(Server.MapPath("~/Files/encrypt.txt"));
-                     StreamWriter sw = new StreamWriter(Server.MapPath("~/Files/encrypt_out.txt"));
-
-                     while (!sr.EndOfStream)
-                     {
-                         inputText = sr.ReadLine().ToUpper();
-                         sw.Write(cipher.Encrypt(inputText, parameterName.ToUpper()));
-                     }
-
-                     //sw.WriteLine(cipher.Encrypt(inputText, parameterName));
-                     sr.Close();
-                     sw.Close();
-                 }
-                 else if (parameterName == null)
-                 {
-                     Response.Write("<script>alert('Заполните поле ключ!')</script>");
-                 }
-                 else
-                 {
-                     Response.Write("<script>alert('Заполните поле ключ!')</script>");
-                 }
-
-             }
-             catch(Exception ex)
-             {
-
-             }
-            */
+           
             return RedirectToAction("Crypt");
         }
 
