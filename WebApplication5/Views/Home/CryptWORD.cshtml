@@ -1,8 +1,8 @@
 ﻿
 @{
     ViewBag.Title = "CryptWORD";
-    string qwert = WebApplication5.Controllers.HomeController.wordtxt;
-    string qwert_out = WebApplication5.Controllers.HomeController.wordtxt_out;
+    string qwerty = WebApplication5.Controllers.HomeController.wordtxt;
+    string qwerty_out = WebApplication5.Controllers.HomeController.wordtxt_out;
     var text = "";
     Array userData = null;
     var result = "";
@@ -45,7 +45,7 @@
 }
 
 <br />
-<strong>Шифровка docx файла</strong>
+<strong><img src="~/Images/locked data.PNG" width="40" height="45" />Шифровка docx файла</strong>
 <hr />
 <h4>Загрузите файл формата <font color="red">docx</font> для шифрования информации в нем</h4>
 
@@ -98,7 +98,7 @@
             <details>
                 <summary>Исходный текст:</summary>
                 <div class="box1">
-                    @qwert
+                    @qwerty
                 </div>
             </details>
         }
@@ -144,7 +144,7 @@
                         <details>
                             <summary>Текст в зашифрованном виде: </summary>
                             <div class="box1">
-                                @qwert_out
+                                @qwerty_out
                             </div>
                         </details>
                     }

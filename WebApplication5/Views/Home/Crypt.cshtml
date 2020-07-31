@@ -61,7 +61,9 @@
 }
 
 <br />
-<strong>Шифровка txt файла</strong>
+<strong>
+    <img src="~/Images/locked data.PNG" width="40" height="45"/>Шифровка txt файла
+</strong>
 <hr />
 <h4>Загрузите файл формата <font color="red">txt</font> для шифрования информации в нем</h4>
 
@@ -145,7 +147,7 @@
         @Html.AntiForgeryToken()
         <div class="form-horizontal">
             <!-- атрибут name такой же как в контроллере у метода параметр -->
-            <input type="text" name="key_crypt_txt" id="ls" />
+        <input type="text" name="key_crypt_txt" id="ls" />
         </div>
         <br>
         <button type="submit" runat="server" id="btnLogin">Зашифровать!</button>

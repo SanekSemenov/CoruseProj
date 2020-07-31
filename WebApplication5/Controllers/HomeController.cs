@@ -234,72 +234,82 @@ namespace WebApplication5.Controllers
 
         public ActionResult Encrypting(string key_crypt_txt)
         {
-            string m = System.IO.File.ReadAllText(Server.MapPath("~/Files/encrypt.txt"));
-            string k = key_crypt_txt;
-            
-            int number; // Номер в алфавите
-            int d; // Смещение
-            string s; //Результат
-            int j, f; // Переменная для циклов
-            int t = 0; // Преременная для нумерации символов ключа.
-
-            char[] message = m.ToCharArray(); // Превращаем сообщение в массив символов.
-            char[] key = k.ToCharArray(); // Превращаем ключ в массив символов.
-
-            char[] alphabet = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
-
-            // Перебираем каждый символ сообщения
-            for (int i = 0; i < message.Length; i++)
+            if (key_crypt_txt.Length > 0)//textBoxKeyWord.Text.Length > 0)
             {
-                // Ищем индекс буквы
-                for (j = 0; j < alphabet.Length; j++)
+                string m = System.IO.File.ReadAllText(Server.MapPath("~/Files/encrypt.txt"));
+                string k = key_crypt_txt;
+
+                int number; // Номер в алфавите
+                int d; // Смещение
+                string s; //Результат
+                int j, f; // Переменная для циклов
+                int t = 0; // Преременная для нумерации символов ключа.
+
+                char[] message = m.ToCharArray(); // Превращаем сообщение в массив символов.
+                char[] key = k.ToCharArray(); // Превращаем ключ в массив символов.
+
+                char[] alphabet = { 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
+
+                // Перебираем каждый символ сообщения
+                for (int i = 0; i < message.Length; i++)
                 {
-                    if (message[i] == alphabet[j])
+                    // Ищем индекс буквы
+                    for (j = 0; j < alphabet.Length; j++)
                     {
-                        break;
-                    }
-                }
-
-                if (j != 33) // Если j равно 33, значит символ не из алфавита
-                {
-                    number = j; // Индекс буквы
-
-                    // Ключ закончился - начинаем сначала.
-                    if (t > key.Length - 1) { t = 0; }
-
-                    // Ищем индекс буквы ключа
-                    for (f = 0; f < alphabet.Length; f++)
-                    {
-                        if (key[t] == alphabet[f])
+                        if (message[i] == alphabet[j])
                         {
                             break;
                         }
                     }
 
-                    t++;
-
-                    if (f != 33) // Если f равно 33, значит символ не из алфавита
+                    if (j != 33) // Если j равно 33, значит символ не из алфавита
                     {
-                        d = number + f;
-                    }
-                    else
-                    {
-                        d = number;
-                    }
+                        number = j; // Индекс буквы
 
-                    // Проверяем, чтобы не вышли за пределы алфавита
-                    if (d > 32)
-                    {
-                        d = d - 33;
-                    }
+                        // Ключ закончился - начинаем сначала.
+                        if (t > key.Length - 1) { t = 0; }
 
-                    message[i] = alphabet[d]; // Меняем букву
+                        // Ищем индекс буквы ключа
+                        for (f = 0; f < alphabet.Length; f++)
+                        {
+                            if (key[t] == alphabet[f])
+                            {
+                                break;
+                            }
+                        }
+
+                        t++;
+
+                        if (f != 33) // Если f равно 33, значит символ не из алфавита
+                        {
+                            d = number + f;
+                        }
+                        else
+                        {
+                            d = number;
+                        }
+
+                        // Проверяем, чтобы не вышли за пределы алфавита
+                        if (d > 32)
+                        {
+                            d = d - 33;
+                        }
+
+                        message[i] = alphabet[d]; // Меняем букву
+                    }
                 }
-            }
 
-            s = new string(message); // Собираем символы обратно в строку.
-            System.IO.File.WriteAllText(Server.MapPath("~/Files/encrypt_out.txt"), s);
-           
+                s = new string(message); // Собираем символы обратно в строку.
+                System.IO.File.WriteAllText(Server.MapPath("~/Files/encrypt_out.txt"), s);
+            }
+            else if (key_crypt_txt == null)
+            {
+                Response.Write("<script>alert('Заполните поле ключ!')</script>");
+            }
+            else
+            {
+                Response.Write("<script>alert('Заполните поле ключ!')</script>");
+            }
             return RedirectToAction("Crypt");
         }
 
@@ -386,7 +396,7 @@ namespace WebApplication5.Controllers
 
         public ActionResult EncryptingWord(string key_crypt_word)
         {
-            try
+            if (key_crypt_word.Length > 0)//textBoxKeyWord.Text.Length > 0)
             {
                 string totaltext = "";
                 using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/encrypt.docx"), true))
@@ -473,17 +483,23 @@ namespace WebApplication5.Controllers
                     mainPart.Document.Save();
                 }
             }
-            catch(Exception ex)
+            else if (key_crypt_word == null)
             {
-
+                Response.Write("<script>alert('Заполните поле ключ!')</script>");
             }
-            return View("CryptWORD");
+            else
+            {
+                Response.Write("<script>alert('Заполните поле ключ!')</script>");
+            }
+            return RedirectToAction("CryptWORD");
         }
 
 
         public ActionResult DecryptingWord(string key_decrypt_word)
         {
-            string totaltext = "";
+            if (key_decrypt_word.Length > 0)//textBoxKeyWord.Text.Length > 0)
+            {
+                string totaltext = "";
             using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(Server.MapPath("~/Files/decrypt_word.docx"), true))
             {
                 DocumentFormat.OpenXml.Wordprocessing.Body body
@@ -570,7 +586,15 @@ namespace WebApplication5.Controllers
                 run.AppendChild(new Text(s));
                 mainPart.Document.Save();
             }
-
+            }
+            else if (key_decrypt_word == null)
+            {
+                Response.Write("<script>alert('Заполните поле ключ!')</script>");
+            }
+            else
+            {
+                Response.Write("<script>alert('Заполните поле ключ!')</script>");
+            }
 
             return RedirectToAction("DecryptWORD");
         }

@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Decrypt";
     List<string> files = new List<string>();
     string folderPath = Server.MapPath("~/Files");
@@ -50,7 +49,6 @@
         {
             // Empty file.
             crypty = "Файл пуст.";
-
         }
         else
         {
@@ -60,13 +58,14 @@
     {
         // File does not exist.
         crypty = "Файл еще не готов!";
-
     }
 
 }
 
 <br />
-<strong>Дешифровка txt файла</strong>
+<strong>
+    <img src="~/Images/unlocked data.PNG"width="40" height="45" />Дешифровка txt файла
+</strong>
 <hr />
 <h4>Загрузите файл формата <font color="red">txt</font> для дешифрования информации в нем</h4>
 
