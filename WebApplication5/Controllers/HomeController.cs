@@ -598,11 +598,5 @@ namespace WebApplication5.Controllers
 
             return RedirectToAction("DecryptWORD");
         }
-
-
     }
-
-
-       
-    
 }
