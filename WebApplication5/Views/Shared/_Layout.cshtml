@@ -22,13 +22,10 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <!-- <li>Html.ActionLink("Домашняя страница", "Index", "Home")</li> -->
-                    <!--Html.ActionLink("Информация", "About", "Home")</li> -->
-                    <li>@Html.ActionLink("Зашифровать TXT", "Crypt", "Home")</li>
-                    <li>@Html.ActionLink("Дешифровать TXT", "Decrypt", "Home")</li>
-                    <li>@Html.ActionLink("Зашифровать WORD", "CryptWORD", "Home")</li>
-                    <li>@Html.ActionLink("Десшифровать WORD", "DecryptWORD", "Home")</li>
-                    <!--Html.ActionLink("Связаться", "Contact", "Home")</li>-->
-
+                    <li>@Html.ActionLink("Зашифровать TXT", "Crypt", "EncTxt")</li>
+                    <li>@Html.ActionLink("Дешифровать TXT", "Decrypt", "DecrTxt")</li>
+                    <li>@Html.ActionLink("Зашифровать WORD", "CryptWORD", "EncWord")</li>
+                    <li>@Html.ActionLink("Дешифровать WORD", "DecryptWORD", "DecrWord")</li>
                 </ul>
                 </div>
             </div>
@@ -37,7 +34,7 @@
             @RenderBody()
             <hr />
             <footer>
-                <p>&copy; @DateTime.Now.Year - мое приложение ASP.NET</p>
+                <p>First web - application &copy; Sanek Semenov</p>
             </footer>
         </div>
 

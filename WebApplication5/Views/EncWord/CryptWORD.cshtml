@@ -1,8 +1,8 @@
 ﻿
 @{
     ViewBag.Title = "CryptWORD";
-    string qwerty = WebApplication5.Controllers.HomeController.wordtxt;
-    string qwerty_out = WebApplication5.Controllers.HomeController.wordtxt_out;
+    string qwerty = WebApplication5.Controllers.EncWordController.wordtxt;
+    string qwerty_out = WebApplication5.Controllers.EncWordController.wordtxt_out;
     var text = "";
     Array userData = null;
     var result = "";
@@ -49,7 +49,7 @@
 <hr />
 <h4>Загрузите файл формата <font color="red">docx</font> для шифрования информации в нем</h4>
 
-@using (Html.BeginForm("UploadWORD", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("UploadWORD", "EncWord", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <input type="file" name="uploadword" />
     <br>
@@ -106,7 +106,7 @@
 </body>
 </html>
 
-@using (Html.BeginForm("EncryptingWORD", "Home", FormMethod.Post))
+@using (Html.BeginForm("EncryptingWORD", "EncWord", FormMethod.Post))
 {
     if (isReady == 2)
     {
@@ -160,7 +160,7 @@ else
 
 }
 
-@using (Html.BeginForm("Downloadword", "Home"))
+@using (Html.BeginForm("Downloadword", "EncWord"))
 {
     if (crypty == "" & isReady == 2)
     {

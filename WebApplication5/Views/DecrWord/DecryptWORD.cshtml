@@ -1,81 +1,63 @@
-﻿@{
-    ViewBag.Title = "Decrypt";
-    List<string> files = new List<string>();
-    string folderPath = Server.MapPath("~/Files");
-    string[] filePaths = Directory.GetFiles(folderPath, "*.txt");
-    List<string> CollectionFileNames = new List<string>();
-    for (int i = 0; i < filePaths.Length; i++)
-    {
-        CollectionFileNames.Add(Path.GetFileName(filePaths[i]));
-    }
+﻿
+@{
+    ViewBag.Title = "DecryptWORD";
+    string qwert = WebApplication5.Controllers.DecrWordController.dewordtxt;
+    string qwert_out = WebApplication5.Controllers.DecrWordController.dewordtxt_out;
+    var text = "";
+    Array userData = null;
+    var result = "";
+    int isReady = 0;
+    int IsReadyOut = 0;
+    Array userData_OUT = null;
 
     char[] delimiterChar = { ',' };
 
-    var chooseFile = Server.MapPath("~/Files/decrypt.txt");
-
-    var result = "";
-    int isReady = 0;
-    Array userData1 = null;
-    Array userData_OUT = null;
-    var goodFile = Server.MapPath("~/Files/decrypt_out.txt");
+    var dataFile = Server.MapPath("~/Files/decrypt_word.docx");
+    var goodFile = Server.MapPath("~/Files/decrypt_word_out.docx");
     string crypty = "";
 
-    if (File.Exists(chooseFile))
+
+
+    if (File.Exists(dataFile))
     {
-        userData1 = File.ReadAllLines(chooseFile);
-        if (userData1 == null)
-        {
-            // Empty file.
-            result = "Файл загружен, но он пуст.";
-            isReady = 1;
-        }
-        else
-        {
-            result = "Файл готов к дешифровке!";
-            isReady = 2;
-        }
+        isReady = 2;
+        result = "Файл готов к шифрованию!";
     }
     else
     {
         // File does not exist.
         result = "Файла не существует.";
-        isReady = 0;
     }
 
     if (File.Exists(goodFile))
     {
-        userData_OUT = File.ReadAllLines(goodFile);
-        if (userData_OUT == null)
-        {
-            // Empty file.
-            crypty = "Файл пуст.";
-        }
-        else
-        {
-        }
+        IsReadyOut = 2;
     }
     else
     {
         // File does not exist.
         crypty = "Файл еще не готов!";
+
     }
 
 }
 
-<br />
-<strong>
-    <img src="~/Images/unlocked data.PNG"width="40" height="45" />Дешифровка txt файла
-</strong>
-<hr />
-<h4>Загрузите файл формата <font color="red">txt</font> для дешифрования информации в нем</h4>
 
-@using (Html.BeginForm("DeUpload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+<br />
+<strong>  <img src="~/Images/unlocked data.PNG" width="40" height="45" />Дешифровка docx файла</strong>
+<hr />
+<h4>Загрузите файл формата <font color="red">docx</font> для дешифрования информации в нем</h4>
+
+@using (Html.BeginForm("DeUploadWORD", "DecrWord", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <input type="file" name="deupload" />
+    <input type="file" name="deuploadword" />
     <br>
     <input type="submit" value="Загрузить" />
+
 }
+
 <h4>------------------------------------------------------------------------------------------------------------</h4>
+
 @{
     if (isReady == 2)
     {
@@ -84,15 +66,10 @@
                 <img src="~/Images/ok.PNG" width="38" height="41" /> @result
             </label>
         </h5>
+
+
     }
-    else if (isReady == 1)
-    {
-        <h5>
-            <label>
-                <img src="~/Images/empty.PNG" width="38" height="41" />@result , но он пуст
-            </label>
-        </h5>
-    }
+
     else
     {
         <h5>
@@ -119,22 +96,12 @@
 <body>
     <div>
 
-
         @if (isReady == 2)
         {
             <details>
-                <summary>Текст файла</summary>
+                <summary>Исходный текст:</summary>
                 <div class="box1">
-                    @foreach (string dataLine in userData1)
-                    {
-
-                        foreach (string dataItem in dataLine.Split(delimiterChar))
-                        {
-                            @dataItem
-                        }
-
-
-                    }
+                    @qwert
                 </div>
             </details>
         }
@@ -143,20 +110,24 @@
 </body>
 </html>
 
-@using (Html.BeginForm("Decrypting", "Home", FormMethod.Post))
+@using (Html.BeginForm("DecryptingWord", "DecrWord", FormMethod.Post))
 {
     if (isReady == 2)
     {
+
         <h4>------------------------------------------------------------------------------------------------------------</h4>
         <h5>Введите ключ:</h5>
         @Html.AntiForgeryToken()
         <div class="form-horizontal">
             <!-- атрибут name такой же как в контроллере у метода параметр -->
-            <input type="text" name="key_decrypt_txt" id="ls" />
+            <input type="text" name="key_decrypt_word" id="ls" />
 
         </div>
         <br>
-        <button type="submit" runat="server" id="btnLogin">Расшифровать!</button>
+        <button type="submit" runat="server" id="btnLogin">Зашифровать!</button>
+        //Response.Write("<script>alert('Успешно зашифрован!')</script>");
+
+        <br />
 
         if (crypty == "")
         {
@@ -181,18 +152,11 @@
                     {
                         <h4>------------------------------------------------------------------------------------------------------------</h4>
                         <details>
-                            <summary>Текст в дешифрованном виде: </summary>
+                            <summary>Текст в зашифрованном виде: </summary>
                             <div class="box1">
-                                @foreach (string dataLine in userData_OUT)
-                                {
 
-                                    foreach (string dataItem in dataLine.Split(delimiterChar))
-                                    {
-                                        @dataItem
-                                    }
+                                @qwert_out
 
-
-                                }
                             </div>
                         </details>
                     }
@@ -202,14 +166,19 @@
         </html>
 
     }
+
 }
+else
+{
+
 }
 
-@using (Html.BeginForm("DeDownload", "Home"))
+}
+
+@using (Html.BeginForm("DeDownloadword", "DecrWord"))
 {
-    if (crypty == "" && isReady == 2)
+    if (crypty == "" & isReady == 2)
     {
-        <h4>------------------------------------------------------------------------------------------------------------</h4>
         <h4>Файл забрать ниже ↓</h4>
         <input type="submit" value="Скачать" />
     }
@@ -217,5 +186,6 @@
     {
 
     }
+
 }
 

@@ -1,37 +1,56 @@
 ﻿
 @{
-    ViewBag.Title = "DecryptWORD";
-    string qwert = WebApplication5.Controllers.HomeController.dewordtxt;
-    string qwert_out = WebApplication5.Controllers.HomeController.dewordtxt_out;
+    ViewBag.Title = "Crypt";
+
     var text = "";
     Array userData = null;
     var result = "";
     int isReady = 0;
-    int IsReadyOut = 0;
     Array userData_OUT = null;
 
     char[] delimiterChar = { ',' };
 
-    var dataFile = Server.MapPath("~/Files/decrypt_word.docx");
-    var goodFile = Server.MapPath("~/Files/decrypt_word_out.docx");
+    var dataFile = Server.MapPath("~/Files/encrypt.txt");
+    var goodFile = Server.MapPath("~/Files/encrypt_out.txt");
     string crypty = "";
-
-
 
     if (File.Exists(dataFile))
     {
-        isReady = 2;
-        result = "Файл готов к шифрованию!";
+        userData = File.ReadAllLines(dataFile);
+        if (userData == null)
+        {
+            // Empty file.
+            text = "Файл пуст.";
+            result = "Файл загружен, но он пуст.";
+            isReady = 1;
+
+        }
+        else
+        {
+            result = "Файл готов к шифрованию!";
+            isReady = 2;
+        }
     }
     else
     {
         // File does not exist.
+        text = " ";
         result = "Файла не существует.";
+        isReady = 0;
     }
 
     if (File.Exists(goodFile))
     {
-        IsReadyOut = 2;
+        userData_OUT = File.ReadAllLines(goodFile);
+        if (userData_OUT == null)
+        {
+            // Empty file.
+            crypty = "Файл пуст.";
+
+        }
+        else
+        {
+        }
     }
     else
     {
@@ -39,18 +58,18 @@
         crypty = "Файл еще не готов!";
 
     }
-
 }
 
-
 <br />
-<strong>  <img src="~/Images/unlocked data.PNG" width="40" height="45" />Дешифровка docx файла</strong>
+<strong>
+    <img src="~/Images/locked data.PNG" width="40" height="45" />Шифровка txt файла
+</strong>
 <hr />
-<h4>Загрузите файл формата <font color="red">docx</font> для дешифрования информации в нем</h4>
+<h4>Загрузите файл формата <font color="red">txt</font> для шифрования информации в нем</h4>
 
-@using (Html.BeginForm("DeUploadWORD", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Upload", "EncTxt", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <input type="file" name="deuploadword" />
+    <input type="file" name="upload" />
     <br>
     <input type="submit" value="Загрузить" />
 
@@ -66,10 +85,15 @@
                 <img src="~/Images/ok.PNG" width="38" height="41" /> @result
             </label>
         </h5>
-
-
     }
-
+    else if (isReady == 1)
+    {
+        <h5>
+            <label>
+                <img src="~/Images/empty.PNG" width="38" height="41" />@result , но он пуст
+            </label>
+        </h5>
+    }
     else
     {
         <h5>
@@ -79,7 +103,6 @@
         </h5>
     }
 }
-
 
 <html>
 <head>
@@ -95,40 +118,41 @@
 </head>
 <body>
     <div>
-
-        @if (isReady == 2)
+        @text
+        @if (text == "")
         {
             <details>
                 <summary>Исходный текст:</summary>
                 <div class="box1">
-                    @qwert
+                    @foreach (string dataLine in userData)
+                    {
+                        foreach (string dataItem in dataLine.Split(delimiterChar))
+                        {
+                            @dataItem
+                        }
+                    }
                 </div>
             </details>
         }
-
     </div>
 </body>
 </html>
 
-@using (Html.BeginForm("DecryptingWord", "Home", FormMethod.Post))
+@using (Html.BeginForm("Encrypting", "EncTxt", FormMethod.Post))
 {
     if (isReady == 2)
     {
-
         <h4>------------------------------------------------------------------------------------------------------------</h4>
         <h5>Введите ключ:</h5>
         @Html.AntiForgeryToken()
         <div class="form-horizontal">
             <!-- атрибут name такой же как в контроллере у метода параметр -->
-            <input type="text" name="key_decrypt_word" id="ls" />
-
+            <input type="text" name="key_crypt_txt" id="ls" />
         </div>
         <br>
         <button type="submit" runat="server" id="btnLogin">Зашифровать!</button>
         //Response.Write("<script>alert('Успешно зашифрован!')</script>");
-
         <br />
-
         if (crypty == "")
         {
 
@@ -146,7 +170,6 @@
             </head>
             <body>
                 <div>
-
                     @crypty
                     @if (crypty == "")
                     {
@@ -154,19 +177,23 @@
                         <details>
                             <summary>Текст в зашифрованном виде: </summary>
                             <div class="box1">
+                                @foreach (string dataLine in userData_OUT)
+                                {
 
-                                @qwert_out
+                                    foreach (string dataItem in dataLine.Split(delimiterChar))
+                                    {
+                                        @dataItem
+                                    }
 
+
+                                }
                             </div>
                         </details>
                     }
-
                 </div>
             </body>
         </html>
-
     }
-
 }
 else
 {
@@ -175,9 +202,9 @@ else
 
 }
 
-@using (Html.BeginForm("DeDownloadword", "Home"))
+@using (Html.BeginForm("Download", "EncTxt"))
 {
-    if (crypty == "" & isReady == 2)
+    if (crypty == "" && isReady == 2)
     {
         <h4>Файл забрать ниже ↓</h4>
         <input type="submit" value="Скачать" />

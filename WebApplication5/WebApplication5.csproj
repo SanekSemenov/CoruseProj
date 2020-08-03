@@ -133,11 +133,17 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\DecrTxtController.cs" />
+    <Compile Include="Controllers\DecrWordController.cs" />
+    <Compile Include="Controllers\EncTxtController.cs" />
+    <Compile Include="Controllers\EncWordController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Decrypt.cs" />
+    <Compile Include="Services\Encrypt.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -183,12 +189,10 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\Upload.cshtml" />
-    <Content Include="Views\Home\Crypt.cshtml" />
-    <Content Include="Views\Home\Decrypt.cshtml" />
-    <Content Include="Views\Home\DeUpload.cshtml" />
-    <Content Include="Views\Home\CryptWORD.cshtml" />
-    <Content Include="Views\Home\DecryptWORD.cshtml" />
+    <Content Include="Views\EncTxt\Crypt.cshtml" />
+    <Content Include="Views\DecrTxt\Decrypt.cshtml" />
+    <Content Include="Views\EncWord\CryptWORD.cshtml" />
+    <Content Include="Views\DecrWord\DecryptWORD.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
